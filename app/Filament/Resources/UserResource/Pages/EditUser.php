@@ -29,7 +29,7 @@ class EditUser extends EditRecord
         ->title('Usuario Modificado')
         ->body('El Usuario ha Sido Modificado Satisfactoriamente.')
         ->color('success')
-        ->duration(300)
+        ->duration(1200)
         ->send();
     }
 }

@@ -29,7 +29,7 @@ class EditPermission extends EditRecord
         ->title('Permiso Modificado')
         ->body('El Permiso ha Sido Modificado Satisfactoriamente.')
         ->color('success')
-        ->duration(300)
+        ->duration(1200)
         ->send();
     }
 }

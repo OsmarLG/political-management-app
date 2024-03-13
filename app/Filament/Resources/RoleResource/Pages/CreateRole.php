@@ -22,7 +22,7 @@ class CreateRole extends CreateRecord
         ->title('Rol Creado')
         ->body('El Nuevo Rol ha Sido Creado Satisfactoriamente.')
         ->color('success')
-        ->duration(300)
+        ->duration(1200)
         ->send();
     }
 }

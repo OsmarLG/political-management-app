@@ -23,7 +23,7 @@ class CreatePermission extends CreateRecord
         ->title('Permiso Creado')
         ->body('El Nuevo Permiso ha Sido Creado Satisfactoriamente.')
         ->color('success')
-        ->duration(300)
+        ->duration(1200)
         ->send();
     }
 }

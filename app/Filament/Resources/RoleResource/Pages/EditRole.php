@@ -29,7 +29,7 @@ class EditRole extends EditRecord
         ->title('Rol Modificado')
         ->body('El Rol ha Sido Modificado Satisfactoriamente.')
         ->color('success')
-        ->duration(300)
+        ->duration(1200)
         ->send();
     }
 }

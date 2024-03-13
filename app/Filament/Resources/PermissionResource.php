@@ -9,7 +9,7 @@ use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
-use Spatie\Permission\Models\Permission;
+use App\Models\Permission;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -23,8 +23,8 @@ class PermissionResource extends Resource
     protected static ?string $label = 'Permiso';
     protected static ?string $pluralLabel = 'Permisos';
     protected static ?string $navigationLabel = 'Permisos';
-    protected static ?string $navigationGroup = 'Users Management';
-    protected static ?string $navigationIcon = 'heroicon-m-shield-exclamation';    
+    protected static ?string $navigationGroup = 'Users Settings';
+    protected static ?string $navigationIcon = 'heroicon-o-key';    
     protected static ?int    $navigationSort = 3;
 
     public static function form(Form $form): Form
@@ -35,7 +35,7 @@ class PermissionResource extends Resource
                 ->label('Permiso')
                 ->placeholder('Permiso')
                 ->required()
-                ->unique()
+                ->unique(ignoreRecord: true)
                 ->minLength('3')
                 ->maxLength('30'),
             ]);
@@ -45,15 +45,17 @@ class PermissionResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')
-                ->label('Rol')
-                ->searchable(),
+                TextColumn::make('id')->sortable()->searchable(),
+                TextColumn::make('name')->sortable()->searchable()->label('Permiso'),
+                TextColumn::make('created_at')->sortable()->dateTime('d-m-Y')->label('Fecha Creación'),
+                TextColumn::make('updated_at')->sortable()->dateTime('d-m-Y')->label('Fecha Modificación'),
             ])
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
