@@ -149,14 +149,11 @@ class UserResource extends Resource
                     ->sortable()->searchable(),
                 Tables\Columns\TextColumn::make('name')
                     ->label('Nombre')
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('apellido_paterno')
-                    ->label('Apellido Paterno')
+                    ->sortable()
                     ->searchable()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('apellido_materno')
-                    ->label('Apellido Materno')
-                    ->sortable(),
+                    ->formatStateUsing(function ($state, $record) {
+                        return $record->name . ' ' . $record->apellido_paterno . ' ' . $record->apellido_materno;
+                    }),
                 Tables\Columns\TextColumn::make('username')
                     ->label('Usuario')
                     ->sortable()
@@ -164,7 +161,11 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('email')
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('status')
+                Tables\Columns\TextColumn::make('roles.name')
+                    ->label('Roles')
+                    ->formatStateUsing(function ($state, $record) {
+                        return $record->roles->first()?->name ?? 'Sin rol';
+                    }),                Tables\Columns\TextColumn::make('status')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('created_at')->sortable()->dateTime('d-m-Y')->label('Fecha Creación')->toggleable(isToggledHiddenByDefault: true),
