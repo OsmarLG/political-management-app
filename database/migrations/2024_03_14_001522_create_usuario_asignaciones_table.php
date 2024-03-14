@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('usuario_asignaciones', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->enum('modelo', ['zona', 'seccion', 'manzana']);
+            $table->enum('modelo', ['Zona', 'Seccion', 'Manzana']);
             $table->unsignedBigInteger('id_modelo');
             $table->enum('status', ['ACTIVO', 'INACTIVO'])->default('ACTIVO');
             $table->timestamps();

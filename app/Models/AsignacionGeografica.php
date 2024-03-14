@@ -21,7 +21,7 @@ class AsignacionGeografica extends Model
     ];
 
     // Método para obtener el modelo asociado dinámicamente.
-    public function modelo()
+    public function asignable()
     {
         return $this->morphTo(null, 'modelo', 'id_modelo');
     }

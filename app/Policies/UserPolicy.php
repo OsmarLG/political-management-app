@@ -70,6 +70,11 @@ class UserPolicy
         if ($model->hasRole('MASTER') && !$user->hasRole('MASTER')) {
             return false;
         }
+
+        // Un administrador solo puede editar su propio perfil, a menos que sea un 'MASTER'
+        if ($user->hasRole('ADMIN') && !$user->is($model) && !$user->hasRole('MASTER')) {
+            return false;
+        }
     
         return $user->hasRole(['MASTER', 'ADMIN']);
     }

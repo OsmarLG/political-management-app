@@ -48,4 +48,19 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function getFullNameAttribute()
+    {
+        return "{$this->name} {$this->apellido_paterno} {$this->apellido_materno}";
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('status', 'ACTIVO');
+    }
+
+    public function Asignacion()
+    {
+        return $this->hasOne(UsuarioAsignacion::class);
+    }
 }

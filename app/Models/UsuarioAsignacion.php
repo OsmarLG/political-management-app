@@ -23,8 +23,7 @@ class UsuarioAsignacion extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    // Método para obtener el modelo asociado dinámicamente.
-    public function modelo()
+    public function asignable()
     {
         return $this->morphTo(null, 'modelo', 'id_modelo');
     }
