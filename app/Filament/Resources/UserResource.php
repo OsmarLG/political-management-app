@@ -28,7 +28,7 @@ class UserResource extends Resource
     protected static ?string $navigationLabel = 'Usuarios';
     protected static ?string $navigationGroup = 'Users Settings';
     protected static ?string $navigationIcon = 'heroicon-o-user';    
-    protected static ?int    $navigationSort = 1;
+    protected static ?int    $navigationSort = 4;
 
     public static function form(Form $form): Form
     {
@@ -88,7 +88,6 @@ class UserResource extends Resource
                         Select::make('roles')
                             ->label('Roles')
                             ->placeholder('Selecciona uno o multiples roles')
-                            ->multiple()
                             ->relationship('roles', 'name', function (Builder $query, $record) {
                                 $currentUserId = optional($record)->id; // Utiliza optional para evitar errores si $record es null.
                                 $currentUserRoles = $currentUserId ? User::find($currentUserId)->roles->pluck('name') : collect();
@@ -107,11 +106,13 @@ class UserResource extends Resource
                                 return $query;
                             })                         
                             ->preload()
+                            ->searchable()
                             ->live(),
                         Select::make('permissions')
                             ->label('Permisos')
                             ->placeholder('Selecciona uno o multiples permisos')
                             ->multiple()
+                            ->searchable()
                             ->relationship('permissions', 'name', function (Builder $query, $livewire) {
                                 $currentUserId = optional($livewire->record)->id;
                                 
@@ -132,6 +133,9 @@ class UserResource extends Resource
                             ->live(),
                         Select::make('status')
                             ->required()
+                            ->searchable()
+                            ->preload()
+                            ->live()
                             ->options([
                                 'ACTIVO' => 'ACTIVO',
                                 'INACTIVO' => 'INACTIVO'

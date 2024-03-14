@@ -28,7 +28,7 @@ class RoleResource extends Resource
     protected static ?string $navigationLabel = 'Roles';
     protected static ?string $navigationGroup = 'Users Settings';
     protected static ?string $navigationIcon = 'heroicon-o-finger-print';  
-    protected static ?int    $navigationSort = 2;
+    protected static ?int    $navigationSort = 5;
 
     public static function form(Form $form): Form
     {
@@ -46,6 +46,7 @@ class RoleResource extends Resource
                     Select::make('permissions')
                         ->label('Permisos')
                         ->placeholder('Selecciona uno o multiples permisos')
+                        ->searchable()
                         ->multiple()
                         ->relationship('permissions', 'name', fn (Builder $query) => 
                             auth()->user()->hasRole('MASTER') ? $query : $query->where('name', '!=', 'All')->where('name', '!=', 'Users')
