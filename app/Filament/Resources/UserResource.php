@@ -7,8 +7,8 @@ use App\Models\User;
 use Filament\Tables;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
-use Illuminate\Validation\Rule;
 use Filament\Resources\Resource;
+use Filament\Tables\Actions\Action;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
 use Filament\Tables\Columns\TextColumn;
@@ -16,8 +16,6 @@ use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Resources\Pages\CreateRecord;
 use App\Filament\Resources\UserResource\Pages;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Resources\UserResource\RelationManagers;
 
 class UserResource extends Resource
 {
@@ -103,6 +101,13 @@ class UserResource extends Resource
                                     });
                                 }
                         
+                                if (auth()->user()->hasRole('ZONAL') && !auth()->user()->hasRole('MASTER')) {
+                                    $query->where(function ($query) use ($currentUserRoles) {
+                                        $query->whereNotIn('name', ['MASTER', 'ADMIN', 'ZONAL'])
+                                              ->orWhereIn('name', $currentUserRoles);
+                                    });
+                                }
+                        
                                 return $query;
                             })                         
                             ->preload()
@@ -122,7 +127,7 @@ class UserResource extends Resource
                                     // Filtra los permisos si el usuario autenticado no es MASTER.
                                     // Ajusta 'All' y 'Users' según tus necesidades o lógica de negocio.
                                     $query->where(function ($query) use ($currentUserPermissions) {
-                                        $query->whereNotIn('name', ['All', 'Users'])
+                                        $query->whereIn('name', ['Crear Encuesta'])
                                               ->orWhereIn('name', $currentUserPermissions);
                                     });
                                 }
@@ -179,6 +184,10 @@ class UserResource extends Resource
                 //
             ])
             ->actions([
+                Action::make('view')
+                ->label('Ver')
+                ->url(fn ($record) => UserResource::getUrl('view', ['record' => $record]))
+                ->icon('heroicon-o-eye'),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
@@ -192,7 +201,6 @@ class UserResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
         ];
     }
 
@@ -202,6 +210,7 @@ class UserResource extends Resource
             'index' => Pages\ListUsers::route('/'),
             'create' => Pages\CreateUser::route('/create'),
             'edit' => Pages\EditUser::route('/{record}/edit'),
+            'view' => Pages\ViewUser::route('/{record}/view'),
         ];
     }
 }

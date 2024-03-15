@@ -20,7 +20,7 @@ class UserPolicy
     public function viewAny(User $user): bool
     {
         //
-        return $user->hasRole(['MASTER', 'ADMIN']);
+        return $user->hasRole(['MASTER', 'ADMIN', 'ZONAL']);
     }
 
     /**
@@ -29,7 +29,7 @@ class UserPolicy
     public function view(User $user, User $model): bool
     {
         //
-        return $user->hasRole(['MASTER', 'ADMIN']);
+        return $user->hasRole(['MASTER', 'ADMIN', 'ZONAL']);
     }
 
     /**
@@ -38,7 +38,7 @@ class UserPolicy
     public function create(User $user): bool
     {
         //
-        return $user->hasRole(['MASTER', 'ADMIN']);
+        return $user->hasRole(['MASTER', 'ADMIN', 'ZONAL']);
 
                 // $user->hasPermissionTo('Create User');
 
@@ -56,6 +56,10 @@ class UserPolicy
     
         // Un administrador solo puede editar su propio perfil, a menos que sea un 'MASTER'
         if ($user->hasRole('ADMIN') && !$user->is($model) && !$user->hasRole('MASTER')) {
+            return false;
+        }
+
+        if ($user->hasRole('ZONAL') && ($model->hasRole('MASTER') || $model->hasRole('ADMIN'))) {
             return false;
         }
     
