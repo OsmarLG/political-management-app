@@ -2,16 +2,23 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\ManzanaResource\Pages;
-use App\Filament\Resources\ManzanaResource\RelationManagers;
-use App\Models\Manzana;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use App\Models\Zona;
 use Filament\Tables;
+use App\Models\Manzana;
+use App\Models\Seccion;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
+use Filament\Resources\Resource;
+use Filament\Forms\Components\Card;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Resources\ManzanaResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\ManzanaResource\RelationManagers;
 
 class ManzanaResource extends Resource
 {
@@ -28,16 +35,50 @@ class ManzanaResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('nombre')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\Textarea::make('descripcion'),
-                Forms\Components\Select::make('seccion_id')
-                    ->relationship('seccion', 'nombre')
-                    ->preload()
-                    ->searchable()
-                    ->live()
-                    ->required(),
+                Section::make()
+                    ->schema([
+                        Section::make('Detalles de la Manzana')
+                            ->schema([
+                                TextInput::make('nombre')
+                                    ->required()
+                                    ->maxLength(255)
+                                    ->label('Nombre de la manzana')
+                                    ->placeholder('Escribe el nombre de la manzana')
+                                    ->columnSpan(2),
+
+                                Textarea::make('descripcion')
+                                    ->maxLength(65535)
+                                    ->label('Descripción de la manzana')
+                                    ->placeholder('Proporciona una descripción detallada')
+                                    ->columnSpan(2),
+
+                                Select::make('zona_id')
+                                    ->label('Zona')
+                                    ->options(Zona::all()->pluck('nombre', 'id'))
+                                    ->searchable()
+                                    ->reactive()
+                                    ->afterStateUpdated(fn (callable $set) => $set('seccion_id', null)),
+                                Select::make('seccion_id')
+                                    ->label('Sección')
+                                    ->options(function (callable $get) {
+                                        $zonaId = $get('zona_id');
+                                        // Si no se ha seleccionado una zona, devuelve todas las secciones.
+                                        // De lo contrario, filtra las secciones por la zona seleccionada.
+                                        return Seccion::when($zonaId, function ($query) use ($zonaId) {
+                                            return $query->where('zona_id', $zonaId);
+                                        })->pluck('nombre', 'id');
+                                    })
+                                    ->searchable()
+                                    ->preload()
+                                    ->reactive() // Importante para asegurar que se actualiza cuando cambia zona_id
+                                    ->required()
+                                    ->label('Sección')
+                                    ->placeholder('Selecciona una sección')
+                                    ->columnSpan(2),                                
+                            ])
+                            ->columns(2)
+                            ->collapsible(),
+                    ]),
             ]);
     }
 
@@ -47,14 +88,16 @@ class ManzanaResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('id')->sortable(),
                 Tables\Columns\TextColumn::make('nombre')->searchable()->sortable(),
-                Tables\Columns\TextColumn::make('seccion.nombre')->searchable(),
                 Tables\Columns\TextColumn::make('descripcion'),
+                Tables\Columns\TextColumn::make('seccion.nombre')->searchable(),
+                Tables\Columns\TextColumn::make('seccion.zona.nombre')->searchable(),
             ])
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

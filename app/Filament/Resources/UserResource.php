@@ -175,7 +175,8 @@ class UserResource extends Resource
                     ->label('Rol')
                     ->formatStateUsing(function ($state, $record) {
                         return $record->roles->first()?->name ?? 'Sin rol';
-                    }),                Tables\Columns\TextColumn::make('status')
+                    }),                
+                Tables\Columns\TextColumn::make('status')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('created_at')->sortable()->dateTime('d-m-Y')->label('Fecha Creación')->toggleable(isToggledHiddenByDefault: true),

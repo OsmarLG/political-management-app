@@ -23,4 +23,9 @@ class Zona extends Model
     {
         return $this->hasMany(Seccion::class, 'zona_id');
     }
+
+    public function manzanas()
+    {
+        return $this->hasManyThrough(Manzana::class, Seccion::class);
+    }
 }

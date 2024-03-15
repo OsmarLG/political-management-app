@@ -49,6 +49,11 @@ class UserPolicy
      */
     public function update(User $user, User $model): bool
     {
+
+        if ($user->id === $model->id) {
+            return true;
+        }
+        
         // Un usuario no puede editar a otro usuario con rol 'MASTER' a menos que también tenga ese rol
         if ($model->hasRole('MASTER') && !$user->hasRole('MASTER')) {
             return false;
