@@ -22,7 +22,7 @@ class CreateUsuarioAsignacion extends CreateRecord
         ->title('Asignacion de usuario creada')
         ->body('La nueva asignacion de Usuario ha Sido Creada Satisfactoriamente.')
         ->color('success')
-        ->duration(1200)
+        ->duration(2500)
         ->send();
     }
 }

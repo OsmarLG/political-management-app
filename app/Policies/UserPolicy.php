@@ -60,12 +60,39 @@ class UserPolicy
             return $user->is($model) || (!$model->hasRole('MASTER') && !$model->hasRole('ADMIN'));
         }
     
-        // Un usuario con rol 'ZONAL' no puede editar usuarios con rol 'MASTER' o 'ADMIN'
-        if ($user->hasRole('ZONAL') && ($model->hasRole('MASTER') || $model->hasRole('ADMIN'))) {
-            return false;
+        // Para usuarios con rol 'ZONAL' asegurarse de que solo puedan editar usuarios de niveles más bajos.
+        if ($user->hasRole('ZONAL')) {
+            // Verificar que el modelo no tenga roles de igual o mayor jerarquía.
+            if ($model->hasRole('MASTER') || $model->hasRole('ADMIN') || $model->hasRole('ZONAL')) {
+                return false;
+            }
+
+            // Obtener la zona asignada al usuario 'ZONAL'.
+            $zonalAsignacion = $user->Asignacion()->where('modelo', 'Zona')->first();
+            $zonalAssignedZoneId = $zonalAsignacion ? $zonalAsignacion->id_modelo : null;
+
+            // Para 'SECCIONAL', verificar que la sección asignada esté en la misma zona que el 'ZONAL'.
+            if ($model->hasRole('SECCIONAL')) {
+                $seccionalAsignacion = $model->Asignacion()->where('modelo', 'Seccion')->first();
+                $seccionalAssignedZoneId = $seccionalAsignacion ? $seccionalAsignacion->asignable->zona_id : null;
+
+                if ($zonalAssignedZoneId !== $seccionalAssignedZoneId) {
+                    return false;
+                }
+            }
+
+            // Para 'MANZANAL', verificar que la manzana asignada esté en una sección de la misma zona que el 'ZONAL'.
+            if ($model->hasRole('MANZANAL')) {
+                $manzanalAsignacion = $model->Asignacion()->where('modelo', 'Manzana')->first();
+                $manzanalAssignedSectionId = $manzanalAsignacion ? $manzanalAsignacion->asignable->seccion_id : null;
+                $manzanalAssignedZoneId = $manzanalAsignacion ? $manzanalAsignacion->asignable->seccion->zona_id : null;
+
+                if ($zonalAssignedZoneId !== $manzanalAssignedZoneId) {
+                    return false;
+                }
+            }
         }
-        
-        // Todos los demás casos son permitidos
+
         return true;
     }
 

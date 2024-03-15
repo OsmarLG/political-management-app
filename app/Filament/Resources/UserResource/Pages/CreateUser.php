@@ -22,7 +22,7 @@ class CreateUser extends CreateRecord
         ->title('Usuario Creado')
         ->body('El Nuevo Usuario ha Sido Creado Satisfactoriamente.')
         ->color('success')
-        ->duration(1200)
+        ->duration(2500)
         ->send();
     }
 }

@@ -63,4 +63,19 @@ class User extends Authenticatable
     {
         return $this->hasOne(UsuarioAsignacion::class);
     }
+
+    public function getAsignacionTypeAttribute()
+    {
+        $roles = $this->roles->pluck('name');
+        if ($roles->contains('ZONAL')) {
+            return 'Zona';
+        }
+        if ($roles->contains('SECCIONAL')) {
+            return 'Seccion';
+        }
+        if ($roles->contains('MANZANAL')) {
+            return 'Manzana';
+        }
+        return null; // o cualquier valor predeterminado que desees
+    }
 }
