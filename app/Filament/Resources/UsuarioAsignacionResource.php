@@ -34,6 +34,7 @@ class UsuarioAsignacionResource extends Resource
         ->schema([
             Forms\Components\Select::make('user_id')
                 ->label('Usuario')
+                ->relationship('user','name')
                 ->options(User::query()
                     ->active()
                     ->whereDoesntHave('roles', function ($query) {
@@ -56,19 +57,21 @@ class UsuarioAsignacionResource extends Resource
                 ->live(),
 
             // El campo 'modelo' se rellenará automáticamente basándose en el rol del usuario seleccionado
-            Forms\Components\TextInput::make('modelo')
+            Forms\Components\TextInput::make('modelo')//TIPO DE ASIGANCION 
                 ->label('Tipo de Asignación')
                 ->reactive()
                 ->disabled()
                 ->afterStateUpdated(function ($state, $component, $set) {
                     // No es necesario el tipo Closure aquí
+                    dd($state);
                     $set('id_modelo', null);
                 }),
 
-            Forms\Components\Select::make('id_modelo')
+            Forms\Components\Select::make('id_modelo')              
                 ->label('Asignación')
                 ->options(function (callable $get) {
                     $modelo = $get('modelo');
+
                     switch ($modelo) {
                         case 'Zona':
                             return Zona::all()->pluck('nombre', 'id');
@@ -84,6 +87,9 @@ class UsuarioAsignacionResource extends Resource
                 ->searchable()                  
                 ->hidden(fn (callable $get) => $get('modelo') === null)
                 ->preload()
+                ->afterStateUpdated(function ($state, $component, $set) {
+                    
+                })
                 ->live(),
         ]);
     }
