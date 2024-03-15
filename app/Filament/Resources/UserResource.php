@@ -86,6 +86,7 @@ class UserResource extends Resource
                         Select::make('role')
                             ->label('Rol')
                             ->placeholder('Selecciona un rol')
+                            ->disabled(fn ($record) => optional($record)->Asignacion()->exists())
                             ->relationship('roles', 'name', function (Builder $query, $record) {
                                 $currentUserId = optional($record)->id; // Utiliza optional para evitar errores si $record es null.
                                 $currentUserRoles = $currentUserId ? User::find($currentUserId)->roles->pluck('name') : collect();
@@ -171,7 +172,7 @@ class UserResource extends Resource
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('roles.name')
-                    ->label('Roles')
+                    ->label('Rol')
                     ->formatStateUsing(function ($state, $record) {
                         return $record->roles->first()?->name ?? 'Sin rol';
                     }),                Tables\Columns\TextColumn::make('status')

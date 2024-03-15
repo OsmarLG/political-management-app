@@ -53,16 +53,19 @@ class UserPolicy
         if ($model->hasRole('MASTER') && !$user->hasRole('MASTER')) {
             return false;
         }
-    
-        // Un administrador solo puede editar su propio perfil, a menos que sea un 'MASTER'
-        if ($user->hasRole('ADMIN') && !$user->is($model) && !$user->hasRole('MASTER')) {
-            return false;
+        
+        // Un administrador puede editar su propio perfil o si tiene rol 'MASTER'
+        if ($user->hasRole('ADMIN') && !$user->hasRole('MASTER')) {
+            // Permitir la edición si es su propio perfil o si el otro usuario no es 'MASTER' o 'ADMIN'
+            return $user->is($model) || (!$model->hasRole('MASTER') && !$model->hasRole('ADMIN'));
         }
-
+    
+        // Un usuario con rol 'ZONAL' no puede editar usuarios con rol 'MASTER' o 'ADMIN'
         if ($user->hasRole('ZONAL') && ($model->hasRole('MASTER') || $model->hasRole('ADMIN'))) {
             return false;
         }
-    
+        
+        // Todos los demás casos son permitidos
         return true;
     }
 
@@ -71,16 +74,7 @@ class UserPolicy
      */
     public function delete(User $user, User $model): bool
     {
-        if ($model->hasRole('MASTER') && !$user->hasRole('MASTER')) {
-            return false;
-        }
-
-        // Un administrador solo puede editar su propio perfil, a menos que sea un 'MASTER'
-        if ($user->hasRole('ADMIN') && !$user->is($model) && !$user->hasRole('MASTER')) {
-            return false;
-        }
-    
-        return $user->hasRole(['MASTER', 'ADMIN']);
+        return $user->hasRole(['MASTER']);
     }
 
     /**
