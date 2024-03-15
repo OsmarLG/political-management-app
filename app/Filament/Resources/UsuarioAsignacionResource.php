@@ -34,7 +34,7 @@ class UsuarioAsignacionResource extends Resource
         ->schema([
             Forms\Components\Select::make('user_id')
                 ->label('Usuario')
-                ->relationship('user','name')
+                ->relationship('user', 'name')
                 ->options(User::query()
                     ->active()
                     ->whereDoesntHave('roles', function ($query) {
@@ -126,6 +126,7 @@ class UsuarioAsignacionResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
