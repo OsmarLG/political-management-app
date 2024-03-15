@@ -20,7 +20,7 @@ class UserPolicy
     public function viewAny(User $user): bool
     {
         //
-        return $user->hasRole(['MASTER', 'ADMIN', 'ZONAL']);
+        return $user->hasRole(['MASTER', 'ADMIN', 'ZONAL','SECCIONAL']);
     }
 
     /**
@@ -29,7 +29,7 @@ class UserPolicy
     public function view(User $user, User $model): bool
     {
         //
-        return $user->hasRole(['MASTER', 'ADMIN', 'ZONAL']);
+        return $user->hasRole(['MASTER', 'ADMIN', 'ZONAL','SECCIONAL']);
     }
 
     /**
@@ -38,7 +38,7 @@ class UserPolicy
     public function create(User $user): bool
     {
         //
-        return $user->hasRole(['MASTER', 'ADMIN', 'ZONAL']);
+        return $user->hasRole(['MASTER', 'ADMIN', 'ZONAL','SECCIONAL']);
 
                 // $user->hasPermissionTo('Create User');
 
@@ -49,6 +49,11 @@ class UserPolicy
      */
     public function update(User $user, User $model): bool
     {
+
+        if($user->id == $model->id){
+            return true;
+        }
+
         // Un usuario no puede editar a otro usuario con rol 'MASTER' a menos que también tenga ese rol
         if ($model->hasRole('MASTER') && !$user->hasRole('MASTER')) {
             return false;
@@ -91,6 +96,32 @@ class UserPolicy
                     return false;
                 }
             }
+
+            //
+        }
+
+        if($user->hasRole('SECCIONAL')){
+               // Verificar que el modelo no tenga roles de igual o mayor jerarquía.
+            if ($model->hasRole('MASTER') || $model->hasRole('ADMIN') || $model->hasRole('ZONAL')|| $model->hasRole('SECCIONAL')) {
+                return false;
+            }
+
+            // Obtener la zona asignada al usuario 'SECCIONAL'.
+            $seccionalAsignacion = $user->Asignacion()->where('modelo', 'Seccion')->first();
+            $seccionalAssignedZoneId = $seccionalAsignacion ? $seccionalAsignacion->id_modelo : null;
+       
+
+            // Para 'MANZANAL', verificar que la manzana asignada esté en una sección de la misma zona que el 'SECCIONAL'.
+            if ($model->hasRole('MANZANAL')) {
+            $manzanalAsignacion = $model->Asignacion()->where('modelo', 'Manzana')->first();
+            $manzanalAssignedSectionId = $manzanalAsignacion ? $manzanalAsignacion->asignable->seccion_id : null;
+            $manzanalAssignedZoneId = $manzanalAsignacion ? $manzanalAsignacion->asignable->seccion->zona_id : null;
+
+            if ($seccionalAssignedZoneId !== $manzanalAssignedSectionId) {
+                return false;
+            }
+        }
+
         }
 
         return true;

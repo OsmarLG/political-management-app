@@ -56,8 +56,25 @@ class UsuarioAsignacionPolicy
      */
     public function delete(User $user, UsuarioAsignacion $usuarioAsignacion): bool
     {
-        //
-        return $user->hasRole(['MASTER', 'ADMIN', 'ZONAL', 'SECCIONAL']);
+        if($user->hasRole('ADMIN') || $user->hasRole('MASTER')){
+            return true;
+        }
+
+        if($user->hasRole('SECCIONAL')){
+            $seccionalAsignacion = $user->Asignacion()->where('modelo', 'Seccion')->first();
+            $seccion_id = $seccionalAsignacion ? $seccionalAsignacion->asignable->zona_id : null;
+
+            if ($usuarioAsignacion->user->hasRole('MANZANAL')) {
+                $manzanalAsignacion = $usuarioAsignacion->user->Asignacion()->where('modelo', 'Manzana')->first();
+                $manzanalAssignedSectionId = $manzanalAsignacion ? $manzanalAsignacion->asignable->seccion_id : null;
+                if($manzanalAssignedSectionId == $seccion_id){
+                    return true;
+                }
+            }
+        }
+
+
+        return false;
     }
 
     /**

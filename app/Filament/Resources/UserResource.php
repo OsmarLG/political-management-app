@@ -108,6 +108,13 @@ class UserResource extends Resource
                                               ->orWhereIn('name', $currentUserRoles);
                                     });
                                 }
+
+                                if (auth()->user()->hasRole('SECCIONAL') && !auth()->user()->hasRole('MASTER')) {
+                                    $query->where(function ($query) use ($currentUserRoles) {
+                                        $query->whereNotIn('name', ['MASTER', 'ADMIN', 'ZONAL','SECCIONAL'])
+                                              ->orWhereIn('name', $currentUserRoles);
+                                    });
+                                }
                         
                                 return $query;
                             })                         
