@@ -59,13 +59,7 @@ class UsuarioAsignacionResource extends Resource
             // El campo 'modelo' se rellenará automáticamente basándose en el rol del usuario seleccionado
             Forms\Components\TextInput::make('modelo')//TIPO DE ASIGANCION 
                 ->label('Tipo de Asignación')
-                ->reactive()
-                ->disabled()
-                ->afterStateUpdated(function ($state, $component, $set) {
-                    // No es necesario el tipo Closure aquí
-                    dd($state);
-                    $set('id_modelo', null);
-                }),
+                ->readOnly(),
 
             Forms\Components\Select::make('id_modelo')              
                 ->label('Asignación')
