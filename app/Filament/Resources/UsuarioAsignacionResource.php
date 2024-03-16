@@ -71,68 +71,55 @@ class UsuarioAsignacionResource extends Resource
                 ->label('Tipo de Asignación')
                 ->readOnly(),
 
-            Forms\Components\Select::make('id_modelo')              
-                ->label('Asignación')
-                ->options(function (callable $get) {
-                    $modelo = $get('modelo');
-
-                Forms\Components\Select::make('id_modelo')
-                ->label('Asignación')
-                ->options(function (callable $get) {
-                    $modelo = $get('modelo');
-                    $user = auth()->user();
-                    
-                    // Encuentra la zona asignada al usuario ZONAL
-                    $userZoneId = optional($user->Asignacion()->where('modelo', 'Zona')->first())->id_modelo;
-            
-                    // Encuentra las IDs ya asignadas para filtrarlas de las opciones
-                    $assignedIds = UsuarioAsignacion::where('modelo', $modelo)->pluck('id_modelo')->toArray();
-            
-                    switch ($modelo) {
-                        case 'Zona':
-                            // Retorna las zonas que no han sido asignadas aún
-                            return Zona::when($user->hasRole(['MASTER', 'ADMIN']), function ($query) use ($assignedIds) {
-                                    return $query->whereNotIn('id', $assignedIds);
-                                })->pluck('nombre', 'id');
-            
-                        case 'Seccion':
-                            // Retorna las secciones de la zona del usuario que no han sido asignadas aún
-                            return Seccion::when($user->hasRole(['MASTER', 'ADMIN', 'ZONAL']) && $userZoneId, function ($query) use ($userZoneId, $assignedIds) {
-                                    return $query->where('zona_id', $userZoneId)
-                                                 ->whereNotIn('id', $assignedIds);
-                                })->pluck('nombre', 'id');
-            
-                        case 'Manzana':
-                            if(auth()->user()->hasRole(['MASTER','ADMIN'])){
-                                return Manzana::all()->pluck('nombre', 'id');
-                            }
-                            if(auth()->user()->hasRole(['ZONAL','SECCIONAL'])){
-                                return Manzana::where('seccion_id',function($query){
-                                    $query->select(DB::raw('id_modelo FROM users,usuario_asignaciones WHERE users.id = usuario_asignaciones.user_id
-                                    AND users.id = '.auth()->user()->id));
-                                })
-                                ->pluck('nombre', 'id');
-                            }
-                            // Retorna las manzanas de las secciones de la zona del usuario que no han sido asignadas aún
-                            return Manzana::when($user->hasRole(['MASTER', 'ADMIN', 'ZONAL', 'SECCIONAL']) && $userZoneId, function ($query) use ($userZoneId, $assignedIds) {
-                                    return $query->whereHas('seccion', function ($subQuery) use ($userZoneId) {
-                                            $subQuery->where('zona_id', $userZoneId);
-                                        })
-                                        ->whereNotIn('id', $assignedIds);
-                                })->pluck('nombre', 'id');
-            
-                        default:
-                            return [];
-                    }
-                })
-                ->reactive()
-                ->searchable()
-                ->hidden(fn (callable $get) => $get('modelo') === null)
-                ->preload()
-                ->afterStateUpdated(function ($state, $component, $set) {
-                    
-                })
-                ->live(),
+            Forms\Components\Select::make('id_modelo')
+            ->label('Asignación')
+            ->options(function (callable $get) {
+                $modelo = $get('modelo');
+                $user = auth()->user();
+                
+                // Encuentra la zona asignada al usuario ZONAL
+                $userZoneId = optional($user->Asignacion()->where('modelo', 'Zona')->first())->id_modelo;
+        
+                // Encuentra las IDs ya asignadas para filtrarlas de las opciones
+                $assignedIds = UsuarioAsignacion::where('modelo', $modelo)->pluck('id_modelo')->toArray();
+        
+                switch ($modelo) {
+                    case 'Zona':
+                        // Retorna las zonas que no han sido asignadas aún
+                        return Zona::when($user->hasRole(['MASTER', 'ADMIN']), function ($query) use ($assignedIds) {
+                                return $query->whereNotIn('id', $assignedIds);
+                            })->pluck('nombre', 'id');
+        
+                    case 'Seccion':
+                        // Retorna las secciones de la zona del usuario que no han sido asignadas aún
+                        return Seccion::when($user->hasRole(['MASTER', 'ADMIN', 'ZONAL']) && $userZoneId, function ($query) use ($userZoneId, $assignedIds) {
+                                return $query->where('zona_id', $userZoneId)
+                                             ->whereNotIn('id', $assignedIds);
+                            })->pluck('nombre', 'id');
+        
+                    case 'Manzana':
+                        if(auth()->user()->hasRole(['MASTER','ADMIN'])){
+                            return Manzana::all()->pluck('nombre', 'id');
+                        }
+                        if(auth()->user()->hasRole(['ZONAL','SECCIONAL'])){
+                            return Manzana::where('seccion_id',function($query){
+                                $query->select(DB::raw('id_modelo FROM users,usuario_asignaciones WHERE users.id = usuario_asignaciones.user_id
+                                AND users.id = '.auth()->user()->id));
+                            })
+                            ->pluck('nombre', 'id');
+                        }
+                        // Retorna las manzanas de las secciones de la zona del usuario que no han sido asignadas aún
+                        return Manzana::when($user->hasRole(['MASTER', 'ADMIN', 'ZONAL', 'SECCIONAL']) && $userZoneId, function ($query) use ($userZoneId, $assignedIds) {
+                                return $query->whereHas('seccion', function ($subQuery) use ($userZoneId) {
+                                        $subQuery->where('zona_id', $userZoneId);
+                                    })
+                                    ->whereNotIn('id', $assignedIds);
+                            })->pluck('nombre', 'id');
+        
+                    default:
+                        return [];
+                }
+            }),
         ]);
     }
 
