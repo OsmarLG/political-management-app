@@ -50,6 +50,12 @@ class UsuarioAsignacionResource extends Resource
                                     $query->where('name', 'MANZANAL');
                                 });
                             }
+                            if(auth()->user()->hasRole('ZONAL')){
+                                $query->whereHas('roles', function ($query) {
+                                    $query->where('name', 'MANZANAL');
+                                    $query->orWhere('name', 'SECCIONAL');
+                                });
+                            }
 
                             return $query->get()
                             ->pluck('full_name', 'id');

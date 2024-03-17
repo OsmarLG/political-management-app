@@ -62,8 +62,71 @@ class UsuarioAsignacionPolicy
      */
     public function update(User $user, UsuarioAsignacion $usuarioAsignacion): bool
     {
-        //
-        return $user->hasRole(['MASTER', 'ADMIN']);
+       if($user->hasRole('ADMIN') || $user->hasRole('MASTER')){
+            return true;
+        }
+
+        if($user->hasRole('SECCIONAL')){
+
+            $seccionalAsignacion = $user->Asignacion()->where('modelo', 'Seccion')->first();
+            $seccion_id = $seccionalAsignacion ? $seccionalAsignacion->id_modelo : null;
+            
+            if ($usuarioAsignacion->user->hasRole('MANZANAL')) {
+                $manzanalAsignacion = $usuarioAsignacion->user->Asignacion()->where('modelo', 'Manzana')->first();
+                $manzanalAssignedSectionId = $manzanalAsignacion ? $manzanalAsignacion->asignable->seccion_id : null;
+                if($manzanalAssignedSectionId == $seccion_id){
+                    return true;
+                }
+            }
+        }
+
+
+
+        // Los roles 'MASTER' y 'ADMIN' pueden eliminar cualquier asignación
+        if ($user->hasRole(['MASTER', 'ADMIN'])) {
+            return true;
+        }
+
+        // ZONAL no puede eliminar su propia asignación ni la de otros ZONALES
+        if ($user->hasRole('ZONAL')) {
+            if ($usuarioAsignacion->user_id == $user->id) {
+                return false; // No puede eliminar su propia asignación
+            }
+
+            $assignedZonal = $usuarioAsignacion->user; // Usuario asignado en la asignación
+            // Comprobar si la asignación pertenece a otro ZONAL
+            if ($assignedZonal->hasRole('ZONAL')) {
+                return false; // No puede eliminar la asignación de otro ZONAL
+            }
+
+            // Para SECCIONAL y MANZANAL, verificar que la sección/manzana esté dentro de su zona
+            $asignacion = UsuarioAsignacion::where('user_id', $user->id)->get()->first();
+
+            if ($usuarioAsignacion->modelo == 'Seccion') {
+                $seccionId = $usuarioAsignacion->id_modelo;
+                $seccion = Seccion::find($seccionId);
+                if ($seccion){
+                    if ($seccion->zona_id != $asignacion->id_modelo){
+                        return false;
+                    } else {
+                        return true;
+                    }
+                }
+            }
+
+            if ($usuarioAsignacion->modelo == 'Manzana') {
+                $manzanaId = $usuarioAsignacion->id_modelo;
+                $manzana = Manzana::find($manzanaId);
+                $seccion = $manzana->seccion ?? null;
+                if (!$seccion || $seccion->zona_id != $asignacion->id_modelo) {
+                    return false; // La manzana no está en ninguna sección de la zona del ZONAL
+                } else return true;
+            }
+        }
+
+        // SECCIONAL y MANZANAL no pueden eliminar asignaciones por defecto, pero puedes agregar reglas específicas si es necesario
+
+        return false; 
     }
 
     /**
@@ -77,7 +140,7 @@ class UsuarioAsignacionPolicy
 
         if($user->hasRole('SECCIONAL')){
             $seccionalAsignacion = $user->Asignacion()->where('modelo', 'Seccion')->first();
-            $seccion_id = $seccionalAsignacion ? $seccionalAsignacion->asignable->zona_id : null;
+            $seccion_id = $seccionalAsignacion ? $seccionalAsignacion->id_modelo : null;
 
             if ($usuarioAsignacion->user->hasRole('MANZANAL')) {
                 $manzanalAsignacion = $usuarioAsignacion->user->Asignacion()->where('modelo', 'Manzana')->first();
@@ -89,7 +152,7 @@ class UsuarioAsignacionPolicy
         }
 
 
-        return false;
+
         // Los roles 'MASTER' y 'ADMIN' pueden eliminar cualquier asignación
         if ($user->hasRole(['MASTER', 'ADMIN'])) {
             return true;
