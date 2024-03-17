@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Zona extends Model
 {
@@ -27,5 +28,16 @@ class Zona extends Model
     public function manzanas()
     {
         return $this->hasManyThrough(Manzana::class, Seccion::class);
+    }
+
+    public function asignacionesGeograficas(): MorphMany
+    {
+        return $this->morphMany(AsignacionGeografica::class, 'asignable', 'modelo', 'id_modelo');
+    }
+
+    // Si solo debe haber una asignación por zona
+    public function asignacionGeografica()
+    {
+        return $this->morphOne(AsignacionGeografica::class, 'asignable', 'modelo', 'id_modelo');
     }
 }

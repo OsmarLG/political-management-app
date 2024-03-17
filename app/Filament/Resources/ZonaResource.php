@@ -119,6 +119,7 @@ class ZonaResource extends Resource
         return [
             RelationManagers\SeccionesRelationManager::class,
             RelationManagers\ManzanasRelationManager::class,
+            RelationManagers\AsignacionesGeograficasRelationManager::class,
         ];
     }
 
