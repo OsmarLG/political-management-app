@@ -11,6 +11,7 @@ use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Card;
+use Filament\Forms\Components\View;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Textarea;
@@ -35,6 +36,9 @@ class ManzanaResource extends Resource
     {
         return $form
             ->schema([
+                View::make('manzanas.map')->columnSpan([
+                    'sm' => 2,
+                ]),
                 Section::make()
                     ->schema([
                         Section::make('Detalles de la Manzana')

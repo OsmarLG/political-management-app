@@ -9,6 +9,7 @@ use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Card;
+use Filament\Forms\Components\View;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Textarea;
@@ -34,6 +35,9 @@ class ZonaResource extends Resource
     {
         return $form
         ->schema([
+            View::make('zonas.map')->columnSpan([
+                'sm' => 2,
+            ]),
             Section::make()
                 ->schema([
                     Section::make('Detalles de la Zona')
@@ -80,7 +84,7 @@ class ZonaResource extends Resource
                 ->columnSpan([
                     'sm' => 2,
                 ]),
-        ]);
+            ]);
     }
 
     public static function table(Table $table): Table
@@ -99,6 +103,7 @@ class ZonaResource extends Resource
                 TextColumn::make('manzanas_count')
                     ->label('Número de Manzanas')
                     ->counts('manzanas'),
+                    
             ])
             ->filters([
                 //
