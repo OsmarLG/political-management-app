@@ -97,6 +97,7 @@ class SeccionResource extends Resource
     {
         return [
             RelationManagers\ManzanasRelationManager::class,
+            RelationManagers\AsignacionesGeograficasRelationManager::class,
         ];
     }
 
