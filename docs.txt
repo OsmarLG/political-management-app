@@ -1,0 +1,2 @@
+ hacer relaciones
+ php artisan make:filament-relation-manager EncuestaResource opciones texto_opcion
