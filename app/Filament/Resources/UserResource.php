@@ -102,16 +102,16 @@ class UserResource extends Resource
                                     });
                                 }
                         
-                                if (auth()->user()->hasRole('ZONAL') && !auth()->user()->hasRole('MASTER')) {
+                                if (auth()->user()->hasRole('C DISTRITAL') && !auth()->user()->hasRole('MASTER')) {
                                     $query->where(function ($query) use ($currentUserRoles) {
-                                        $query->whereNotIn('name', ['MASTER', 'ADMIN', 'ZONAL'])
+                                        $query->whereNotIn('name', ['MASTER', 'ADMIN', 'C DISTRITAL'])
                                               ->orWhereIn('name', $currentUserRoles);
                                     });
                                 }
 
-                                if (auth()->user()->hasRole('SECCIONAL') && !auth()->user()->hasRole('MASTER')) {
+                                if (auth()->user()->hasRole('C ENLACE DE MANZANA') && !auth()->user()->hasRole('MASTER')) {
                                     $query->where(function ($query) use ($currentUserRoles) {
-                                        $query->whereNotIn('name', ['MASTER', 'ADMIN', 'ZONAL','SECCIONAL'])
+                                        $query->whereNotIn('name', ['MASTER', 'ADMIN', 'C DISTRITAL','C ENLACE DE MANZANA'])
                                               ->orWhereIn('name', $currentUserRoles);
                                     });
                                 }

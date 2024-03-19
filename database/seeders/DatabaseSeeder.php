@@ -41,8 +41,8 @@ class DatabaseSeeder extends Seeder
         // Roles
         $role1 = Role::create(['name' => 'MASTER', 'guard_name' => 'web']);
         $role2 = Role::create(['name' => 'ADMIN', 'guard_name' => 'web']);
-        $role3 = Role::create(['name' => 'ZONAL', 'guard_name' => 'web']);
-        $role4 = Role::create(['name' => 'SECCIONAL', 'guard_name' => 'web']);
+        $role3 = Role::create(['name' => 'C DISTRITAL', 'guard_name' => 'web']);
+        $role4 = Role::create(['name' => 'C ENLACE DE MANZANA', 'guard_name' => 'web']);
         $role5 = Role::create(['name' => 'MANZANAL', 'guard_name' => 'web']);
 
         // Assign roles to users

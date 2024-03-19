@@ -45,15 +45,15 @@ class UsuarioAsignacionResource extends Resource
                             ->whereDoesntHave('roles', function ($query) {
                                 $query->whereIn('name', ['MASTER', 'ADMIN']);
                             });
-                            if(auth()->user()->hasRole('SECCIONAL')){
+                            if(auth()->user()->hasRole('C ENLACE DE MANZANA')){
                                 $query->whereHas('roles', function ($query) {
                                     $query->where('name', 'MANZANAL');
                                 });
                             }
-                            if(auth()->user()->hasRole('ZONAL')){
+                            if(auth()->user()->hasRole('C DISTRITAL')){
                                 $query->whereHas('roles', function ($query) {
                                     $query->where('name', 'MANZANAL');
-                                    $query->orWhere('name', 'SECCIONAL');
+                                    $query->orWhere('name', 'C ENLACE DE MANZANA');
                                 });
                             }
 
@@ -66,7 +66,7 @@ class UsuarioAsignacionResource extends Resource
                     $user = User::find($state);
                     $roleName = $user->roles->first()?->name; // Obtén el nombre del primer rol
                     // Aquí asumimos que los nombres de los roles y los modelos están en minúsculas y son idénticos
-                    $set('modelo', $roleName === 'ZONAL' ? 'Zona' : ($roleName === 'SECCIONAL' ? 'Seccion' : 'Manzana'));
+                    $set('modelo', $roleName === 'C DISTRITAL' ? 'Zona' : ($roleName === 'C ENLACE DE MANZANA' ? 'Seccion' : 'Manzana'));
                 })
                 ->searchable()                  
                 ->preload()
@@ -83,7 +83,7 @@ class UsuarioAsignacionResource extends Resource
                 $modelo = $get('modelo');
                 $user = auth()->user();
                 
-                // Encuentra la zona asignada al usuario ZONAL
+                // Encuentra la zona asignada al usuario C DISTRITAL
                 $userZoneId = optional($user->Asignacion()->where('modelo', 'Zona')->first())->id_modelo;
         
                 // Encuentra las IDs ya asignadas para filtrarlas de las opciones
@@ -98,7 +98,7 @@ class UsuarioAsignacionResource extends Resource
         
                     case 'Seccion':
                         // Retorna las secciones de la zona del usuario que no han sido asignadas aún
-                        return Seccion::when($user->hasRole(['MASTER', 'ADMIN', 'ZONAL']) && $userZoneId, function ($query) use ($userZoneId, $assignedIds) {
+                        return Seccion::when($user->hasRole(['MASTER', 'ADMIN', 'C DISTRITAL']) && $userZoneId, function ($query) use ($userZoneId, $assignedIds) {
                                 return $query->where('zona_id', $userZoneId)
                                              ->whereNotIn('id', $assignedIds);
                             })->pluck('nombre', 'id');
@@ -107,7 +107,7 @@ class UsuarioAsignacionResource extends Resource
                         if(auth()->user()->hasRole(['MASTER','ADMIN'])){
                             return Manzana::all()->pluck('nombre', 'id');
                         }
-                        if(auth()->user()->hasRole(['ZONAL','SECCIONAL'])){
+                        if(auth()->user()->hasRole(['C DISTRITAL','C ENLACE DE MANZANA'])){
                             return Manzana::where('seccion_id',function($query){
                                 $query->select(DB::raw('id_modelo FROM users,usuario_asignaciones WHERE users.id = usuario_asignaciones.user_id
                                 AND users.id = '.auth()->user()->id));
@@ -115,7 +115,7 @@ class UsuarioAsignacionResource extends Resource
                             ->pluck('nombre', 'id');
                         }
                         // Retorna las manzanas de las secciones de la zona del usuario que no han sido asignadas aún
-                        return Manzana::when($user->hasRole(['MASTER', 'ADMIN', 'ZONAL', 'SECCIONAL']) && $userZoneId, function ($query) use ($userZoneId, $assignedIds) {
+                        return Manzana::when($user->hasRole(['MASTER', 'ADMIN', 'C DISTRITAL', 'C ENLACE DE MANZANA']) && $userZoneId, function ($query) use ($userZoneId, $assignedIds) {
                                 return $query->whereHas('seccion', function ($subQuery) use ($userZoneId) {
                                         $subQuery->where('zona_id', $userZoneId);
                                     })

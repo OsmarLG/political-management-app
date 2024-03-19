@@ -1,4 +1,4 @@
-<h1>Mapa {{ $getRecord()->nombre }}</h1>
+<h1>Mapa {{ $getRecord()->nombre ?? '' }}</h1>
 <div id="mapaZona" style=" width:100%; height: 400px;"></div>
 
 @push('scripts')

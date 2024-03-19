@@ -67,10 +67,10 @@ class User extends Authenticatable
     public function getAsignacionTypeAttribute()
     {
         $roles = $this->roles->pluck('name');
-        if ($roles->contains('ZONAL')) {
+        if ($roles->contains('C DISTRITAL')) {
             return 'Zona';
         }
-        if ($roles->contains('SECCIONAL')) {
+        if ($roles->contains('C ENLACE DE MANZANA')) {
             return 'Seccion';
         }
         if ($roles->contains('MANZANAL')) {
