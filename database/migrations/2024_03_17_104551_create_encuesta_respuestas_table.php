@@ -13,11 +13,8 @@ return new class extends Migration
     {
         Schema::create('encuesta_respuestas', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('encuesta_id')->constrained('encuestas')->onDelete('cascade');
+            $table->foreignId('ejercicio_id')->constrained('ejercicios')->onDelete('cascade');
             $table->foreignId('pregunta_id')->constrained('encuesta_preguntas')->onDelete('cascade');
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('asignacion_geografica_id')->constrained('asignaciones_geograficas')->onDelete('cascade');
-            $table->string('folio');
             $table->string('respuesta');
             $table->timestamps();
         });

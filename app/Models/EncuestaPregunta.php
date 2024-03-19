@@ -13,4 +13,8 @@ class EncuestaPregunta extends Model
         'texto_pregunta',
         'encuesta_id'
     ];
+
+    public function opciones(){
+        return $this->hasMany(EncuestaOpcion::class,'pregunta_id','id');
+    }
 }
