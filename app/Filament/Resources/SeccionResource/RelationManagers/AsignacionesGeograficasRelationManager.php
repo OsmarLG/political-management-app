@@ -1,18 +1,14 @@
 <?php
 
-namespace App\Filament\Resources\ZonaResource\RelationManagers;
+namespace App\Filament\Resources\SeccionResource\RelationManagers;
 
 use Filament\Forms;
 use Filament\Tables;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Forms\Components\View;
-use App\Models\AsignacionGeografica;
-use Filament\Forms\Components\Button;
 use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Builder;
-use Filament\Support\Facades\FilamentAsset;
-use Filament\Forms\Components\Actions\Action;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Resources\RelationManagers\RelationManager;
 
