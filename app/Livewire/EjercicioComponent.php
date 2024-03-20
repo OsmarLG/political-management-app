@@ -2,9 +2,12 @@
 
 namespace App\Livewire;
 
+use Carbon\Carbon;
 use App\Models\User;
+use App\Models\Zona;
 use App\Models\Manzana;
 use App\Models\Seccion;
+use Filament\Forms\Get;
 use Livewire\Component;
 use App\Models\Encuesta;
 use Filament\Forms\Form;
@@ -14,18 +17,17 @@ use App\Models\EncuestaOpcion;
 use App\Models\EncuestaPregunta;
 use App\Models\EncuestaRespuesta;
 use App\Models\UsuarioAsignacion;
-use App\Models\Zona;
-use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
+use App\Models\AsignacionGeografica;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Components\TextInput;
+use Filament\Notifications\Notification;
+use Filament\Forms\Components\View as ViewF;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Concerns\InteractsWithForms;
-use Filament\Forms\Get;
-use Filament\Forms\Components\View as ViewF;
 
 
 class EjercicioComponent extends Component implements HasForms
@@ -59,7 +61,7 @@ class EjercicioComponent extends Component implements HasForms
                 // Agrega la opción al array de opciones del campo de Radio
                 $opcionesCampo[$opcion->texto_opcion] = $opcion->texto_opcion;
             }
-            $campo = Radio::make($pregunta->id)->options($opcionesCampo)->label($pregunta->texto_pregunta);
+            $campo = Radio::make($pregunta->id)->options($opcionesCampo)->label($pregunta->texto_pregunta)->required();
             $campos[] = $campo;
         }
         $opcionesCampo = array();
@@ -82,6 +84,15 @@ class EjercicioComponent extends Component implements HasForms
         ->readOnly()    ;
         $this->manzana = Manzana::find($manzana_id);
         $this->generar_folio();
+
+        $campos[] =  TextInput::make('Folio')
+        ->required()
+        ->maxLength(255)
+        ->label('Folio')
+        ->helperText('El folio del ejercicio.')
+        ->readOnly() 
+        ->default($this->folio)
+        ;
     }
 
     if($usuario->hasRole('C ENLACE DE MANZANA')){
@@ -104,6 +115,14 @@ class EjercicioComponent extends Component implements HasForms
         })
         ->afterStateUpdated(fn (callable $set) => $set('Folio', $this->folio))
         ->placeholder('Selecciona una sección'); 
+
+        $campos[] =  TextInput::make('Folio')
+        ->required()
+        ->maxLength(255)
+        ->label('Folio')
+        ->helperText('El folio del ejercicio.')
+        ->readOnly() 
+        ;
     }
     if($usuario->hasRole('C DISTRITAL')){
         $campos[] =        
@@ -144,6 +163,14 @@ class EjercicioComponent extends Component implements HasForms
         ->afterStateUpdated(fn (callable $set) => $set('Folio', $this->folio))
         ->label('Manzana')
         ->placeholder('Selecciona una Manzana');
+
+        $campos[] =  TextInput::make('Folio')
+        ->required()
+        ->maxLength(255)
+        ->label('Folio')
+        ->helperText('El folio del ejercicio.')
+        ->readOnly() 
+        ;
     }
 
         if($usuario->hasRole('MASTER') || $usuario->hasRole('ADMIN')){
@@ -202,16 +229,17 @@ class EjercicioComponent extends Component implements HasForms
         ->reactive() // Importante para asegurar que se actualiza cuando cambia zona_id
         ->required()
         ->placeholder('Selecciona una Manzana');
+
+        $campos[] =  TextInput::make('Folio')
+        ->required()
+        ->maxLength(255)
+        ->label('Folio')
+        ->helperText('El folio del ejercicio.')
+        ->readOnly() 
+        ;
     }
 
-    $campos[] =  TextInput::make('Folio')
-    ->required()
-    ->maxLength(255)
-    ->label('Folio')
-    ->helperText('El folio del ejercicio.')
-    ->readOnly() 
-    ->default($this->folio)
-    ;
+
 
 
     $campos[] =  TextInput::make('Latitud')
@@ -230,7 +258,7 @@ class EjercicioComponent extends Component implements HasForms
     ->helperText('Coordenadas para el ejercicio.')
     ->readOnly();
 
-    $campos[] = ViewF::make('ejercicios.map')->columnSpan(['sm' => 2,]);
+    $campos[] = ViewF::make('ejercicios.map');
 
     return $form
     ->schema([
@@ -243,24 +271,38 @@ class EjercicioComponent extends Component implements HasForms
        
     public function create(): void
     {
-        // dd($this->form->getState());
+        //dd($this->form->getState());
         $datas = $this->form->getState();
-          
+        $respuestas = array_filter($datas, 'is_numeric', ARRAY_FILTER_USE_KEY);
+
         $ejercicio = new Ejercicio();
-        $ejercicio->asignacion_geografica_id = null;
         $ejercicio->encuesta_id = Encuesta::first()->id;
         $ejercicio->user_id = auth()->user()->id;
-        $ejercicio->folio = '123';
+        $ejercicio->folio = $this->folio;
+        $ejercicio->manzana_id = $this->manzana->id;
         $ejercicio->save();
 
-        foreach($datas as $key => $res){
-            
+        $asignacion_geografica = new AsignacionGeografica();
+        $asignacion_geografica->modelo = 'Ejercicio';
+        $asignacion_geografica->id_modelo = $ejercicio->id;
+        $asignacion_geografica->latitud = $datas['Latitud'];
+        $asignacion_geografica->longitud = $datas['Longitud'];
+        $asignacion_geografica->status = 'ACTIVO';
+        $asignacion_geografica->save();
+    
+        foreach($respuestas as $key => $res){         
             $respuesta = new EncuestaRespuesta();
             $respuesta->ejercicio_id = $ejercicio->id;
             $respuesta->pregunta_id = EncuestaPregunta::where('id',$key)->first()->id;
             $respuesta->respuesta = $res;
             $respuesta->save();
         }
+        Notification::make()
+        ->title('Ejercicio Guardado!')
+        ->success()
+        ->send();
+        $this->folio = "";
+        $this->form->fill();
     }
 
     public function render()
