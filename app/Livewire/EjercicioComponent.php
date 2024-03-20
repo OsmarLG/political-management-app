@@ -62,6 +62,98 @@ class EjercicioComponent extends Component implements HasForms
         $opcionesCampo = array();
     }
 
+    
+
+    $usuario = User::find(auth()->user()->id);
+
+    if($usuario->hasRole('MANZANAL')){
+
+        $usuario = User::find(auth()->user()->id);
+        $manzana_id = UsuarioAsignacion::where('user_id',$usuario->id)->where('modelo','Manzana')->first()->id_modelo;
+        $manzana = Manzana::where('id',$manzana_id)->first();
+/*
+        $campos[] =     
+        Select::make('manzana_id')
+        ->label('Manzana')
+        ->options(function (callable $get) {
+            $usuario = User::find(auth()->user()->id);
+            $manzana_id = UsuarioAsignacion::where('user_id',$usuario->id)->where('modelo','Manzana')->first()->id_modelo;
+            return $manzana = Manzana::where('id',$manzana_id)->pluck('nombre','id');
+        })
+        ->searchable()
+        ->preload()
+        ->reactive() // Importante para asegurar que se actualiza cuando cambia zona_id
+        ->required()
+        ->placeholder('Selecciona una sección');
+*/
+
+
+        $campos[] =  TextInput::make('manzana_id')
+        ->required()
+        ->maxLength(255)
+        ->label('Manzana')
+        ->helperText('El folio del ejercicio.')
+        ->default($manzana->nombre)
+        ->readOnly()    ;
+    
+
+    }
+
+    if($usuario->hasRole('C ENLACE DE MANZANA')){
+        $campos[] =        
+        Select::make('manzana_id')
+        ->label('Manzana')
+        ->options(function (callable $get) {
+            $usuario = User::find(auth()->user()->id);
+            $entidad_id = UsuarioAsignacion::where('user_id',$usuario->id)->where('modelo','Seccion')->first()->id_modelo ?? '';
+            $entidad = Manzana::where('seccion_id',$entidad_id)->pluck('nombre','id') ?? '';
+            return $entidad;
+        })
+        ->searchable()
+        ->preload()
+        ->reactive() // Importante para asegurar que se actualiza cuando cambia zona_id
+        ->required()
+        ->placeholder('Selecciona una sección'); 
+    }
+    if($usuario->hasRole('C DISTRITAL')){
+        $campos[] =        
+        Select::make('seccion_id')
+        ->label('Sección')
+        ->options(function (callable $get) {
+            $usuario = User::find(auth()->user()->id);
+            $entidad_id = UsuarioAsignacion::where('user_id',$usuario->id)->where('modelo','Zona')->first()->id_modelo ?? '';
+            $entidad = Seccion::where('zona_id',$entidad_id)->pluck('nombre','id') ?? '';
+            return $entidad;
+        })
+        ->searchable()
+        ->preload()
+        ->reactive() // Importante para asegurar que se actualiza cuando cambia zona_id
+        ->required()
+        ->label('Sección')
+        ->placeholder('Selecciona una sección'); 
+
+        $campos[] =        
+        Select::make('manzana_id')
+        ->label('Sección')
+        ->options(function (callable $get) {
+            $seccion_id = $get('seccion_id');
+
+            if($seccion_id){
+                return Manzana::when($seccion_id, function ($query) use ($seccion_id) {
+                    return $query->where('seccion_id', $seccion_id);
+                })->pluck('nombre', 'id');
+            }
+
+        })
+        ->searchable()
+        ->preload()
+        ->reactive() // Importante para asegurar que se actualiza cuando cambia zona_id
+        ->required()
+        ->label('Manzana')
+        ->placeholder('Selecciona una Manzana');
+    }
+
+
     $campos[] =  TextInput::make('Folio')
     ->required()
     ->maxLength(255)
@@ -86,60 +178,6 @@ class EjercicioComponent extends Component implements HasForms
     ->helperText('Coordenadas para el ejercicio.')
     ->readOnly()    ;
 
-
-    $usuario = User::find(auth()->user()->id);
-
-    if($usuario->hasRole('MANZANAL')){
-
-        $usuario = User::find(auth()->user()->id);
-        $manzana_id = UsuarioAsignacion::where('user_id',$usuario->id)->where('modelo','Manzana')->first()->id_modelo;
-        $manzana = Manzana::where('id',$manzana_id)->pluck('nombre','id');
-
-        $campos[] =     
-        Select::make('manzana_id')
-        ->label('Manzana')
-        ->options(function (callable $get) {
-            $usuario = User::find(auth()->user()->id);
-            $manzana_id = UsuarioAsignacion::where('user_id',$usuario->id)->where('modelo','Manzana')->first()->id_modelo;
-            return $manzana = Manzana::where('id',$manzana_id)->pluck('nombre','id');
-        })
-        ->searchable()
-        ->preload()
-        ->reactive() // Importante para asegurar que se actualiza cuando cambia zona_id
-        ->required()
-        ->placeholder('Selecciona una sección');
-        
-
-    }else{
-        $campos[] =        
-        Select::make('manzana_id')
-        ->label('Sección')
-        ->options(function (callable $get) {
-    
-            $usuario = User::find(auth()->user()->id);
-            //Si el usuario es manzanal
-            if($usuario->hasRole('MANZANAL')){
-                $manzana_id = UsuarioAsignacion::where('user_id',$usuario->id)->where('modelo','Manzana')->first()->id_modelo;
-                return Manzana::where('id',$manzana_id)->pluck('nombre','id');
-            }else{
-                $zonaId = $get('zona_id');
-                // Si no se ha seleccionado una zona, devuelve todas las secciones.
-                // De lo contrario, filtra las secciones por la zona seleccionada.
-                return Seccion::when($zonaId, function ($query) use ($zonaId) {
-        
-                    return $query->where('zona_id', $zonaId);
-                })->pluck('nombre', 'id');
-            }
-    
-        })
-        ->searchable()
-        ->preload()
-        ->reactive() // Importante para asegurar que se actualiza cuando cambia zona_id
-        ->required()
-        ->label('Sección')
-        ->placeholder('Selecciona una sección')
-        ->columnSpan(2);
-    }
 
     return $form
     ->schema([
