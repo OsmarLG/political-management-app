@@ -9,6 +9,7 @@ use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Card;
+use Filament\Forms\Components\View;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Textarea;
@@ -33,6 +34,9 @@ class SeccionResource extends Resource
     {
         return $form
         ->schema([
+            View::make('secciones.map')->columnSpan([
+                'sm' => 2,
+            ]),
             Section::make()
                 ->schema([
                     Section::make('Detalles de la Sección')
@@ -97,6 +101,7 @@ class SeccionResource extends Resource
     {
         return [
             RelationManagers\ManzanasRelationManager::class,
+            RelationManagers\AsignacionesGeograficasRelationManager::class,
         ];
     }
 

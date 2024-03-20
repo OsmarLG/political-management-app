@@ -27,8 +27,8 @@ class UsuarioAsignacionPolicy
             return true;
         }
     
-        // Los usuarios con roles 'ZONAL' o 'SECCIONAL' deben tener una asignación para ver cualquier asignación
-        if ($user->hasRole(['ZONAL', 'SECCIONAL'])) {
+        // Los usuarios con roles 'C DISTRITAL' o 'C ENLACE DE MANZANA' deben tener una asignación para ver cualquier asignación
+        if ($user->hasRole(['C DISTRITAL', 'C ENLACE DE MANZANA'])) {
             // Verifica si el usuario tiene una asignación asociada
             $hasAsignacion = $user->Asignacion()->exists();
     
@@ -45,7 +45,7 @@ class UsuarioAsignacionPolicy
     public function view(User $user, UsuarioAsignacion $usuarioAsignacion): bool
     {
         //
-        return $user->hasRole(['MASTER', 'ADMIN', 'ZONAL', 'SECCIONAL']);
+        return $user->hasRole(['MASTER', 'ADMIN', 'C DISTRITAL', 'C ENLACE DE MANZANA']);
     }
 
     /**
@@ -54,7 +54,7 @@ class UsuarioAsignacionPolicy
     public function create(User $user): bool
     {
         //
-        return $user->hasRole(['MASTER', 'ADMIN', 'ZONAL', 'SECCIONAL']);
+        return $user->hasRole(['MASTER', 'ADMIN', 'C DISTRITAL', 'C ENLACE DE MANZANA']);
     }
 
     /**
@@ -66,7 +66,7 @@ class UsuarioAsignacionPolicy
             return true;
         }
 
-        if($user->hasRole('SECCIONAL')){
+        if($user->hasRole('C ENLACE DE MANZANA')){
 
             $seccionalAsignacion = $user->Asignacion()->where('modelo', 'Seccion')->first();
             $seccion_id = $seccionalAsignacion ? $seccionalAsignacion->id_modelo : null;
@@ -87,19 +87,19 @@ class UsuarioAsignacionPolicy
             return true;
         }
 
-        // ZONAL no puede eliminar su propia asignación ni la de otros ZONALES
-        if ($user->hasRole('ZONAL')) {
+        // C DISTRITAL no puede eliminar su propia asignación ni la de otros C DISTRITALES
+        if ($user->hasRole('C DISTRITAL')) {
             if ($usuarioAsignacion->user_id == $user->id) {
                 return false; // No puede eliminar su propia asignación
             }
 
             $assignedZonal = $usuarioAsignacion->user; // Usuario asignado en la asignación
-            // Comprobar si la asignación pertenece a otro ZONAL
-            if ($assignedZonal->hasRole('ZONAL')) {
-                return false; // No puede eliminar la asignación de otro ZONAL
+            // Comprobar si la asignación pertenece a otro C DISTRITAL
+            if ($assignedZonal->hasRole('C DISTRITAL')) {
+                return false; // No puede eliminar la asignación de otro C DISTRITAL
             }
 
-            // Para SECCIONAL y MANZANAL, verificar que la sección/manzana esté dentro de su zona
+            // Para C ENLACE DE MANZANA y MANZANAL, verificar que la sección/manzana esté dentro de su zona
             $asignacion = UsuarioAsignacion::where('user_id', $user->id)->get()->first();
 
             if ($usuarioAsignacion->modelo == 'Seccion') {
@@ -119,12 +119,12 @@ class UsuarioAsignacionPolicy
                 $manzana = Manzana::find($manzanaId);
                 $seccion = $manzana->seccion ?? null;
                 if (!$seccion || $seccion->zona_id != $asignacion->id_modelo) {
-                    return false; // La manzana no está en ninguna sección de la zona del ZONAL
+                    return false; // La manzana no está en ninguna sección de la zona del C DISTRITAL
                 } else return true;
             }
         }
 
-        // SECCIONAL y MANZANAL no pueden eliminar asignaciones por defecto, pero puedes agregar reglas específicas si es necesario
+        // C ENLACE DE MANZANA y MANZANAL no pueden eliminar asignaciones por defecto, pero puedes agregar reglas específicas si es necesario
 
         return false; 
     }
@@ -138,7 +138,7 @@ class UsuarioAsignacionPolicy
             return true;
         }
 
-        if($user->hasRole('SECCIONAL')){
+        if($user->hasRole('C ENLACE DE MANZANA')){
             $seccionalAsignacion = $user->Asignacion()->where('modelo', 'Seccion')->first();
             $seccion_id = $seccionalAsignacion ? $seccionalAsignacion->id_modelo : null;
 
@@ -158,19 +158,19 @@ class UsuarioAsignacionPolicy
             return true;
         }
 
-        // ZONAL no puede eliminar su propia asignación ni la de otros ZONALES
-        if ($user->hasRole('ZONAL')) {
+        // C DISTRITAL no puede eliminar su propia asignación ni la de otros C DISTRITALES
+        if ($user->hasRole('C DISTRITAL')) {
             if ($usuarioAsignacion->user_id == $user->id) {
                 return false; // No puede eliminar su propia asignación
             }
 
             $assignedZonal = $usuarioAsignacion->user; // Usuario asignado en la asignación
-            // Comprobar si la asignación pertenece a otro ZONAL
-            if ($assignedZonal->hasRole('ZONAL')) {
-                return false; // No puede eliminar la asignación de otro ZONAL
+            // Comprobar si la asignación pertenece a otro C DISTRITAL
+            if ($assignedZonal->hasRole('C DISTRITAL')) {
+                return false; // No puede eliminar la asignación de otro C DISTRITAL
             }
 
-            // Para SECCIONAL y MANZANAL, verificar que la sección/manzana esté dentro de su zona
+            // Para C ENLACE DE MANZANA y MANZANAL, verificar que la sección/manzana esté dentro de su zona
             $asignacion = UsuarioAsignacion::where('user_id', $user->id)->get()->first();
 
             if ($usuarioAsignacion->modelo == 'Seccion') {
@@ -190,12 +190,12 @@ class UsuarioAsignacionPolicy
                 $manzana = Manzana::find($manzanaId);
                 $seccion = $manzana->seccion ?? null;
                 if (!$seccion || $seccion->zona_id != $asignacion->id_modelo) {
-                    return false; // La manzana no está en ninguna sección de la zona del ZONAL
+                    return false; // La manzana no está en ninguna sección de la zona del C DISTRITAL
                 } else return true;
             }
         }
 
-        // SECCIONAL y MANZANAL no pueden eliminar asignaciones por defecto, pero puedes agregar reglas específicas si es necesario
+        // C ENLACE DE MANZANA y MANZANAL no pueden eliminar asignaciones por defecto, pero puedes agregar reglas específicas si es necesario
 
         return false; 
     }

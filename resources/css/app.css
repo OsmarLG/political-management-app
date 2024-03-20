@@ -1,8 +1,9 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
-@import 'filament/forms/dist/module.esm';
-@import 'filament/tables/dist/module.esm';
+/* @import 'filament/forms/dist/module.esm'; */
+/* @import 'filament/tables/dist/module.esm'; */
 @import 'tailwindcss/utilities';
+@import 'leaflet/dist/leaflet.css';
 
 :root {
     --f-primary: #ff4500; /* Naranja */
