@@ -2,15 +2,17 @@
 
 namespace App\Livewire;
 
+use App\Models\Configuracion;
 use Livewire\Component;
+use App\Models\Encuesta;
 use Filament\Forms\Form;
 use App\Models\Ejercicio;
-use App\Models\Encuesta;
 use App\Models\EncuestaOpcion;
 use App\Models\EncuestaPregunta;
 use App\Models\EncuestaRespuesta;
 use Illuminate\Contracts\View\View;
 use Filament\Forms\Components\Radio;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\MarkdownEditor;
@@ -28,6 +30,12 @@ class EjercicioComponent extends Component implements HasForms
 
     public function form(Form $form): Form
     {
+        /*
+            D(numero de zona)-(Iniciales de nombre del encargado de zona o coordinador distrital)-S(numero de seccion)-(Iniciales de Nombre del coordinador de enlace de manzana)-M(numero de mananza)-(Iniciales de nombre del encargado de manzana)-(DateTime formato ->(dd-mm-YYYY-ss-mm-hh))-Random(1,999)
+        */
+       
+
+        $folio = 'D';
         $preguntas = EncuestaPregunta::all();
  
 
@@ -49,9 +57,59 @@ class EjercicioComponent extends Component implements HasForms
         $opcionesCampo = array();
     }
 
+    $campos[] =  TextInput::make('Folio')
+    ->required()
+    ->maxLength(255)
+    ->label('Folio')
+    ->helperText('El folio del ejercicio.')
+    ->readOnly()    ;
+
+
+    $campos[] =  TextInput::make('Latitud')
+    ->required()
+    ->maxLength(255)
+    ->label('Latitud')
+    ->placeholder('Latitud')
+    ->helperText('Coordenadas para el ejercicio.')
+    ->readOnly()    ;
+
+    $campos[] =  TextInput::make('Longitud')
+    ->required()
+    ->maxLength(255)
+    ->label('Logintud')
+    ->placeholder('Longitud')
+    ->helperText('Coordenadas para el ejercicio.')
+    ->readOnly()    ;
+
+/*
+    $campos[] =        
+    Select::make('manzana_id')
+    ->label('Sección')
+    ->options(function (callable $get) {
+        $zonaId = $get('zona_id');
+        // Si no se ha seleccionado una zona, devuelve todas las secciones.
+        // De lo contrario, filtra las secciones por la zona seleccionada.
+        return Seccion::when($zonaId, function ($query) use ($zonaId) {
+            return $query->where('zona_id', $zonaId);
+        })->pluck('nombre', 'id');
+    })
+    ->searchable()
+    ->preload()
+    ->reactive() // Importante para asegurar que se actualiza cuando cambia zona_id
+    ->required()
+    ->label('Sección')
+    ->placeholder('Selecciona una sección')
+    ->columnSpan(2);
+*/
+
+
+
 
     return $form
+    ->schema([
+        Section::make('Responde las siguientes preguntas')
         ->schema($campos)
+    ])
         ->statePath('data')
         ->model(Ejercicio::class);
     }

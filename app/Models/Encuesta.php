@@ -18,4 +18,10 @@ class Encuesta extends Model
     public function opciones(){
         return $this->hasMany(EncuestaOpcion::class);
     }
+    
+    // Si solo debe haber una asignación por zona
+    public function asignacionGeografica()
+    {
+        return $this->morphOne(AsignacionGeografica::class, 'asignable', 'modelo', 'id_modelo');
+    }
 }

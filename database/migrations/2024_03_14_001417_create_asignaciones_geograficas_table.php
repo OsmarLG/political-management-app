@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('asignaciones_geograficas', function (Blueprint $table) {
             $table->id();
-            $table->enum('modelo', ['Zona', 'Seccion', 'Manzana']);
+            $table->enum('modelo', ['Zona', 'Seccion', 'Manzana', 'Ejercicio', 'Encuesta']);
             $table->unsignedBigInteger('id_modelo');
             $table->decimal('latitud', 10, 8);
             $table->decimal('longitud', 11, 8);

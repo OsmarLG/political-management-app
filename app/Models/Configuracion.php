@@ -11,4 +11,8 @@ class Configuracion extends Model
 
     public const CANDIDATO = 'SIN DEFINIR';
 
+    public static function getCandidato() {
+        return self::CANDIDATO;
+    }
+
 }

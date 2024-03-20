@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('ejercicios', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('asignacion_geografica_id')->constrained('asignaciones_geograficas')->onDelete('cascade');
             $table->foreignId('encuesta_id')->constrained('encuestas')->onDelete('cascade');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('manzana_id')->constrained('manzanas')->onDelete('cascade');
             $table->string('folio');
             $table->timestamps();
         });

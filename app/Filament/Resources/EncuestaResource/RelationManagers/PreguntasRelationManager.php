@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\EncuestaResource\RelationManagers;
 
+use App\Models\Configuracion;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -20,7 +21,9 @@ class PreguntasRelationManager extends RelationManager
             ->schema([
                 Forms\Components\TextInput::make('texto_pregunta')
                     ->required()
-                    ->maxLength(255),
+                    ->maxLength(255)
+                    ->default(Configuracion::getCandidato())
+                    ,
             ]);
     }
 

@@ -25,6 +25,8 @@ class AppServiceProvider extends ServiceProvider
             'Zona' => 'App\Models\Zona',
             'Seccion' => 'App\Models\Seccion',
             'Manzana' => 'App\Models\Manzana',
+            'Ejercicio' => 'App\Models\Ejercicio',
+            'Encuesta' => 'App\Models\Encuesta',
         ]);
     }
 }
