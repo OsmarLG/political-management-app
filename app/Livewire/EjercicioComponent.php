@@ -100,9 +100,15 @@ class EjercicioComponent extends Component implements HasForms
         Select::make('manzana_id')
         ->label('Manzana')
         ->options(function (callable $get) {
+            $assignedIds = UsuarioAsignacion::where('modelo', 'Manzana')->pluck('id_modelo')->toArray();
+
             $usuario = User::find(auth()->user()->id);
             $entidad_id = UsuarioAsignacion::where('user_id',$usuario->id)->where('modelo','Seccion')->first()->id_modelo ?? '';
-            $entidad = Manzana::where('seccion_id',$entidad_id)->pluck('nombre','id') ?? '';
+            $entidad = Manzana::where('seccion_id',$entidad_id)
+            ->whereIn('id', $assignedIds)
+            ->pluck('nombre','id') ?? '';
+
+
             return $entidad;
         })
         ->searchable()
@@ -129,9 +135,13 @@ class EjercicioComponent extends Component implements HasForms
         Select::make('seccion_id')
         ->label('Sección')
         ->options(function (callable $get) {
+            $assignedIds = UsuarioAsignacion::where('modelo', 'Seccion')->pluck('id_modelo')->toArray();
+
             $usuario = User::find(auth()->user()->id);
             $entidad_id = UsuarioAsignacion::where('user_id',$usuario->id)->where('modelo','Zona')->first()->id_modelo ?? '';
-            $entidad = Seccion::where('zona_id',$entidad_id)->pluck('nombre','id') ?? '';
+            $entidad = Seccion::where('zona_id',$entidad_id)
+            ->whereIn('id', $assignedIds)
+            ->pluck('nombre','id') ?? '';
             return $entidad;
         })
         ->searchable()
@@ -146,9 +156,12 @@ class EjercicioComponent extends Component implements HasForms
         ->label('Sección')
         ->options(function (callable $get) {
             $seccion_id = $get('seccion_id');
+
             if($seccion_id){
+                //$assignedIds = UsuarioAsignacion::where('modelo', 'Manzana')->pluck('id_modelo')->toArray();
                 return Manzana::when($seccion_id, function ($query) use ($seccion_id) {
-                    return $query->where('seccion_id', $seccion_id);
+                    return $query->where('seccion_id', $seccion_id) 
+                    ->whereIn('id', UsuarioAsignacion::where('modelo', 'Manzana')->pluck('id_modelo')->toArray());
                 })->pluck('nombre', 'id');
             }
 
@@ -178,7 +191,9 @@ class EjercicioComponent extends Component implements HasForms
         Select::make('zona_id')
         ->label('Zona')
         ->options(function (callable $get) {
-            return Zona::all()->pluck('nombre','id');
+            return Zona::all()
+            ->whereIn('id', UsuarioAsignacion::where('modelo', 'Zona')->pluck('id_modelo')->toArray())
+            ->pluck('nombre','id');
         })
         ->searchable()
         ->preload()
@@ -191,10 +206,11 @@ class EjercicioComponent extends Component implements HasForms
         ->label('Sección')
         ->options(function (callable $get) {
             $zona_id = $get('zona_id');
-
             if($zona_id){
                 return Seccion::when($zona_id, function ($query) use ($zona_id) {
-                    return $query->where('zona_id', $zona_id);
+                    return $query->where('zona_id', $zona_id)
+                    ->whereIn('id', UsuarioAsignacion::where('modelo', 'Seccion')->pluck('id_modelo')->toArray())
+                    ;
                 })->pluck('nombre', 'id');
             }
 
@@ -214,7 +230,9 @@ class EjercicioComponent extends Component implements HasForms
             if($seccion_id){
 
                 return Manzana::when($seccion_id, function ($query) use ($seccion_id) {
-                    return $query->where('seccion_id', $seccion_id);
+                    return $query->where('seccion_id', $seccion_id)
+                    ->whereIn('id', UsuarioAsignacion::where('modelo', 'Manzana')->pluck('id_modelo')->toArray())
+                    ;
                 })->pluck('nombre', 'id');
             }
 
