@@ -17,6 +17,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\ZonaResource\Pages;
+use Filament\Tables\Columns\Layout\View as ViewsT;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\ZonaResource\RelationManagers;
 

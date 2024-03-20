@@ -25,6 +25,8 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Get;
+use Filament\Forms\Components\View as ViewF;
+
 
 class EjercicioComponent extends Component implements HasForms
 {
@@ -62,8 +64,6 @@ class EjercicioComponent extends Component implements HasForms
         }
         $opcionesCampo = array();
     }
-
-    
 
     $usuario = User::find(auth()->user()->id);
 
@@ -215,7 +215,7 @@ class EjercicioComponent extends Component implements HasForms
 
 
     $campos[] =  TextInput::make('Latitud')
-    //->required()
+    ->required()
     ->maxLength(255)
     ->label('Latitud')
     ->placeholder('Latitud')
@@ -223,13 +223,14 @@ class EjercicioComponent extends Component implements HasForms
     ->readOnly()    ;
 
     $campos[] =  TextInput::make('Longitud')
-    //->required()
+    ->required()
     ->maxLength(255)
     ->label('Logintud')
     ->placeholder('Longitud')
     ->helperText('Coordenadas para el ejercicio.')
-    ->readOnly()    ;
+    ->readOnly();
 
+    $campos[] = ViewF::make('ejercicios.map')->columnSpan(['sm' => 2,]);
 
     return $form
     ->schema([
@@ -242,8 +243,7 @@ class EjercicioComponent extends Component implements HasForms
        
     public function create(): void
     {
-
-        dd($this->form->getState());
+        // dd($this->form->getState());
         $datas = $this->form->getState();
           
         $ejercicio = new Ejercicio();
