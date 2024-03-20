@@ -1,5 +1,5 @@
 <h1>Mapa {{ $getRecord()->nombre ?? '' }}</h1>
-<div id="mapaManzana" style=" width:100%; height: 400px;"></div>
+<div wire:ignore id="mapaManzana" style=" width:100%; height: 400px;"></div>
 
 @push('scripts')
 <script>

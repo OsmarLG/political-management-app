@@ -22,6 +22,8 @@ use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Forms\Components\View as ViewF;
+
 
 class EjercicioComponent extends Component implements HasForms
 {
@@ -61,31 +63,6 @@ class EjercicioComponent extends Component implements HasForms
         }
         $opcionesCampo = array();
     }
-
-    $campos[] =  TextInput::make('Folio')
-    ->required()
-    ->maxLength(255)
-    ->label('Folio')
-    ->helperText('El folio del ejercicio.')
-    ->readOnly()    ;
-
-
-    $campos[] =  TextInput::make('Latitud')
-    ->required()
-    ->maxLength(255)
-    ->label('Latitud')
-    ->placeholder('Latitud')
-    ->helperText('Coordenadas para el ejercicio.')
-    ->readOnly()    ;
-
-    $campos[] =  TextInput::make('Longitud')
-    ->required()
-    ->maxLength(255)
-    ->label('Logintud')
-    ->placeholder('Longitud')
-    ->helperText('Coordenadas para el ejercicio.')
-    ->readOnly()    ;
-
 
     $usuario = User::find(auth()->user()->id);
 
@@ -141,6 +118,33 @@ class EjercicioComponent extends Component implements HasForms
         ->columnSpan(2);
     }
 
+    $campos[] =  TextInput::make('Folio')
+    ->required()
+    ->maxLength(255)
+    ->label('Folio')
+    ->helperText('El folio del ejercicio.')
+    ->readOnly()
+    ->default('D')    ;
+
+
+    $campos[] =  TextInput::make('Latitud')
+    ->required()
+    ->maxLength(255)
+    ->label('Latitud')
+    ->placeholder('Latitud')
+    ->helperText('Coordenadas para el ejercicio.')
+    ->readOnly()    ;
+
+    $campos[] =  TextInput::make('Longitud')
+    ->required()
+    ->maxLength(255)
+    ->label('Logintud')
+    ->placeholder('Longitud')
+    ->helperText('Coordenadas para el ejercicio.')
+    ->readOnly();
+
+    $campos[] = ViewF::make('ejercicios.map')->columnSpan(['sm' => 2,]);
+
     return $form
     ->schema([
         Section::make('Responde las siguientes preguntas')
@@ -152,7 +156,7 @@ class EjercicioComponent extends Component implements HasForms
        
     public function create(): void
     {
-        //dd($this->form->getState());
+        // dd($this->form->getState());
         $datas = $this->form->getState();
           
         $ejercicio = new Ejercicio();

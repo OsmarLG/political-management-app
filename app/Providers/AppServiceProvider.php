@@ -30,6 +30,8 @@ class AppServiceProvider extends ServiceProvider
             'Manzana' => 'App\Models\Manzana',
             'Ejercicio' => 'App\Models\Ejercicio',
             'Encuesta' => 'App\Models\Encuesta',
+            'Barda' => 'App\Models\Encuesta',
+            'Casilla' => 'App\Models\Encuesta',
         ]);
 
         FilamentAsset::register([
