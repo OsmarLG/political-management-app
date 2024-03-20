@@ -31,6 +31,11 @@ class Seccion extends Model
         return $this->hasMany(Manzana::class, 'seccion_id');
     }
 
+    public function casillas()
+    {
+        return $this->hasMany(Casilla::class);
+    }
+
     public function asignacionesGeograficas(): MorphMany
     {
         return $this->morphMany(AsignacionGeografica::class, 'asignable', 'modelo', 'id_modelo');

@@ -1,0 +1,13 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+/* @import 'filament/forms/dist/module.esm'; */
+/* @import 'filament/tables/dist/module.esm'; */
+@import 'tailwindcss/utilities';
+@import 'leaflet/dist/leaflet.css';
+
+:root {
+    --f-primary: #ff4500; /* Naranja */
+    --f-primary-hover: #e43f00; /* Un naranja más oscuro para el hover */
+    --f-success: #4ade80; /* Verde (puedes ajustarlo a tu gusto) */
+    --f-danger: #ef4444; /* Rojo (puedes ajustarlo a tu gusto) */
+}

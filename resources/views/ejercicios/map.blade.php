@@ -7,10 +7,6 @@
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-
-        var sidebarToggleButton = document.querySelector('.fi-topbar-open-sidebar-btn');
-
-
         var map = L.map('mapaEjercicio').setView([24.1353403, -110.2867958], 13);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',

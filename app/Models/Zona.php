@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 class Zona extends Model
 {
@@ -36,7 +37,7 @@ class Zona extends Model
     }
 
     // Si solo debe haber una asignación por zona
-    public function asignacionGeografica()
+    public function asignacionGeografica(): MorphOne
     {
         return $this->morphOne(AsignacionGeografica::class, 'asignable', 'modelo', 'id_modelo');
     }
