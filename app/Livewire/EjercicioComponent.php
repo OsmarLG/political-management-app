@@ -294,7 +294,7 @@ class EjercicioComponent extends Component implements HasForms
         $respuestas = array_filter($datas, 'is_numeric', ARRAY_FILTER_USE_KEY);
 
         $ejercicio = new Ejercicio();
-        $ejercicio->encuesta_id = Encuesta::first()->id;
+        $ejercicio->encuesta_id = Encuesta::first()->id ? Encuesta::first()->id : "";
         $ejercicio->user_id = auth()->user()->id;
         $ejercicio->folio = $this->folio;
         $ejercicio->manzana_id = $this->manzana->id;

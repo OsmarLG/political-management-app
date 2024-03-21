@@ -1,4 +1,5 @@
 <div>
+    @if(App\Models\Encuesta::first())
     <form wire:submit="create">
         {{ $this->form }}
     </form>
@@ -11,4 +12,8 @@
 
 
     <x-filament-actions::modals />
+
+    @else
+    <p>Se debe crear la Encuesta antes de comenzar.</p>
+    @endif
 </div>
