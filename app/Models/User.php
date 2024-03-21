@@ -78,4 +78,9 @@ class User extends Authenticatable
         }
         return null; // o cualquier valor predeterminado que desees
     }
+
+    public function iniciales(){
+        $iniciles = substr($this->name, 0, 1) . substr($this->apellido_paterno, 0, 1) . substr($this->apellido_materno, 0, 1);
+        return strtoupper($iniciles);
+    }
 }
