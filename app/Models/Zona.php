@@ -16,6 +16,7 @@ class Zona extends Model
     protected $table = 'zonas';
     
     protected $fillable = [
+        'id',
         'nombre',
         'descripcion',
         'status',
