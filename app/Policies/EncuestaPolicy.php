@@ -29,7 +29,8 @@ class EncuestaPolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasRole(['MASTER', 'ADMIN']);
+        return false;
+        //return $user->hasRole(['MASTER', 'ADMIN']);
     }
 
     /**

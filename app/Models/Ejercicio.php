@@ -14,4 +14,9 @@ class Ejercicio extends Model
     {
         return $this->morphOne(AsignacionGeografica::class, 'asignable', 'modelo', 'id_modelo');
     }
+
+    public function manzana(){
+        return $this->hasOne(Manzana::class, 'id','manzana_id');
+    }
+
 }

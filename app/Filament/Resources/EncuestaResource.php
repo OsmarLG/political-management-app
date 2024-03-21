@@ -22,6 +22,7 @@ class EncuestaResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationGroup = 'System Management';
     protected static ?int    $navigationSort = 5;
+    protected static ?string $navigationLabel = 'Encuesta';
 
     public static function form(Form $form): Form
     {
@@ -49,6 +50,7 @@ class EncuestaResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+
             ->columns([
                 Tables\Columns\TextColumn::make('titulo')
                 ->label('Titulo')
