@@ -134,6 +134,8 @@ class CasillaResource extends Resource
                 Tables\Columns\TextColumn::make('numero')->searchable(),
                 Tables\Columns\TextColumn::make('tipo'),
                 Tables\Columns\TextColumn::make('seccion.nombre')->searchable(),
+                Tables\Columns\TextColumn::make('asignacionGeografica.latitud')->label('Latitud'),
+                Tables\Columns\TextColumn::make('asignacionGeografica.longitud')->label('Longitud'),
             ])
             ->filters([
                 //

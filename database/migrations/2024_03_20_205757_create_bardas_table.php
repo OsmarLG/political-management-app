@@ -13,7 +13,10 @@ return new class extends Migration
     {
         Schema::create('bardas', function (Blueprint $table) {
             $table->id();
+            $table->string('identificador')->require();
+            $table->foreignId('seccion_id')->constrained('secciones')->onDelete('cascade');
             $table->timestamps();
+            $table->softDeletes(); // Esto agrega la columna `deleted_at`
         });
     }
 

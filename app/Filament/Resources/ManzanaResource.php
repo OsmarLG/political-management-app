@@ -10,6 +10,7 @@ use App\Models\Seccion;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
+use App\Models\UsuarioAsignacion;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\View;
 use Filament\Forms\Components\Select;
@@ -130,5 +131,25 @@ class ManzanaResource extends Resource
     public static function getModel(): string
     {
         return \App\Models\Manzana::class;
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery();
+
+        if (auth()->user()->hasRole('MASTER') || auth()->user()->hasRole('ADMIN')) {
+            return $query;
+        } else if (auth()->user()->hasRole('C DISTRITAL')) {
+            $zonaId = UsuarioAsignacion::where('modelo', 'Zona')->where('user_id', auth()->user()->id)->get()->first()->id_modelo;
+            $zona = Zona::find($zonaId);
+            $seccionesIds = $zona->secciones->pluck('id');
+            return $query->whereIn('seccion_id', $seccionesIds);
+        } else if (auth()->user()->hasRole('C ENLACE DE MANZANA')) {
+            $seccionId = UsuarioAsignacion::where('modelo', 'Seccion')->where('user_id', auth()->user()->id)->get()->first()->id_modelo;
+            return $query->where('seccion_id', $seccionId);
+        }
+
+        // O cualquier lógica adicional que necesites
+        return $query;
     }
 }

@@ -8,6 +8,7 @@ use App\Models\Seccion;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
+use App\Models\UsuarioAsignacion;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\View;
 use Filament\Forms\Components\Select;
@@ -119,5 +120,20 @@ class SeccionResource extends Resource
     public static function getModel(): string
     {
         return \App\Models\Seccion::class;
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery();
+
+        if (auth()->user()->hasRole('MASTER') || auth()->user()->hasRole('ADMIN')) {
+            return $query;
+        } else if (auth()->user()->hasRole('C DISTRITAL')) {
+            $zonaId = UsuarioAsignacion::where('modelo', 'Zona')->where('user_id', auth()->user()->id)->get()->first()->id_modelo;
+            return $query->where('zona_id', $zonaId);
+        }
+
+        // O cualquier lógica adicional que necesites
+        return $query;
     }
 }

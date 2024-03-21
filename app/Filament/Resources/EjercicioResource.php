@@ -22,7 +22,7 @@ class EjercicioResource extends Resource
     protected static ?string $label = 'Mis Ejercicios';
     protected static ?string $navigationLabel = 'Mis Ejercicios';
     protected static ?string $navigationGroup = 'Ejercicios';
-    protected static ?string $navigationIcon = 'heroicon-o-cube';    
+    protected static ?string $navigationIcon = 'heroicon-c-folder-open';    
     protected static ?int    $navigationSort = 4;
 
     public static function form(Form $form): Form

@@ -14,7 +14,7 @@ class ManzanaPolicy
     public function viewAny(User $user): bool
     {
         //
-        return $user->hasRole(['MASTER', 'ADMIN']);
+        return $user->hasRole(['MASTER', 'ADMIN', 'C DISTRITAL', 'C ENLACE DE MANZANA', 'C DISTRITAL', 'C ENLACE DE MANZANA']);
     }
 
     /**
@@ -23,7 +23,7 @@ class ManzanaPolicy
     public function view(User $user, Manzana $manzana): bool
     {
         //
-        return $user->hasRole(['MASTER', 'ADMIN']);
+        return $user->hasRole(['MASTER', 'ADMIN', 'C DISTRITAL', 'C ENLACE DE MANZANA']);
     }
 
     /**
@@ -32,7 +32,7 @@ class ManzanaPolicy
     public function create(User $user): bool
     {
         //
-        return $user->hasRole(['MASTER', 'ADMIN']);
+        return $user->hasRole(['MASTER', 'ADMIN', 'C DISTRITAL', 'C ENLACE DE MANZANA']);
     }
 
     /**
@@ -41,7 +41,7 @@ class ManzanaPolicy
     public function update(User $user, Manzana $manzana): bool
     {
         //
-        return $user->hasRole(['MASTER', 'ADMIN']);
+        return $user->hasRole(['MASTER', 'ADMIN', 'C DISTRITAL', 'C ENLACE DE MANZANA']);
     }
 
     /**
@@ -50,7 +50,7 @@ class ManzanaPolicy
     public function delete(User $user, Manzana $manzana): bool
     {
         //
-        return $user->hasRole(['MASTER', 'ADMIN']);
+        return $user->hasRole(['MASTER', 'ADMIN', 'C DISTRITAL', 'C ENLACE DE MANZANA']);
     }
 
     /**
