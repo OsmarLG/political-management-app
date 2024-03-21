@@ -34,9 +34,6 @@ class SeccionResource extends Resource
     {
         return $form
         ->schema([
-            View::make('secciones.map')->columnSpan([
-                'sm' => 2,
-            ]),
             Section::make()
                 ->schema([
                     Section::make('Detalles de la Sección')
@@ -63,6 +60,11 @@ class SeccionResource extends Resource
                                 ->label('Zona')
                                 ->placeholder('Selecciona una zona')
                                 ->columnSpan(2),
+
+                            Section::make('Ubicación Geográfica')
+                                ->schema([                                        
+                                    View::make('secciones.map'),
+                                ]),
                         ])
                         ->columns(2)
                         ->collapsible(),

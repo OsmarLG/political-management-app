@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\CasillaVoto;
 use App\Models\AsignacionGeografica;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -31,5 +32,12 @@ class Casilla extends Model
     public function asignacionGeografica(): MorphOne
     {
         return $this->morphOne(AsignacionGeografica::class, 'asignable', 'modelo', 'id_modelo');
+    }
+
+    public function CasillaVotos(){
+        return $this->hasMany(CasillaVoto::class, 'casilla_id', 'id');
+    }
+    public function CasillaVotosObjetivos(){
+        return $this->hasMany(CasillaVotoObjetivo::class, 'casilla_id', 'id');
     }
 }

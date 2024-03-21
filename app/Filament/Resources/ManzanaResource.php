@@ -36,9 +36,6 @@ class ManzanaResource extends Resource
     {
         return $form
             ->schema([
-                View::make('manzanas.map')->columnSpan([
-                    'sm' => 2,
-                ]),
                 Section::make()
                     ->schema([
                         Section::make('Detalles de la Manzana')
@@ -78,7 +75,11 @@ class ManzanaResource extends Resource
                                     ->required()
                                     ->label('Sección')
                                     ->placeholder('Selecciona una sección')
-                                    ->columnSpan(2),                                
+                                    ->columnSpan(2), 
+                                Section::make('Ubicación Geográfica')
+                                    ->schema([                                        
+                                        View::make('manzanas.map'),
+                                    ]),                               
                             ])
                             ->columns(2)
                             ->collapsible(),
