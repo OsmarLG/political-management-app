@@ -297,7 +297,7 @@ class EjercicioComponent extends Component implements HasForms
         $ejercicio->user_id = auth()->user()->id;
         $ejercicio->folio = $this->folio;
         $ejercicio->manzana_id = $this->manzana->id;
-        if($respuestas['6'] == "SI"){
+        if($respuestas['2'] == "SI"){
             
             $ejercicio->a_favor = "A FAVOR";
         }
