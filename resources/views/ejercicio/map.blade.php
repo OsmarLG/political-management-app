@@ -38,7 +38,7 @@
         var user = @json($getRecord()->user);
         var latitud = @json($getRecord()->asignacionGeografica->latitud);
         var longitud = @json($getRecord()->asignacionGeografica->longitud);
-        var fecha = @json($getRecord()->created_at);
+        var fecha = @json($getRecord()->created_at->diffForHumans());
         
         var map = L.map('mapaEjercicio').setView([latitud, longitud], 13);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
