@@ -62,6 +62,11 @@ class ZonaResource extends Resource
                         ->columns([
                             'sm' => 2,
                         ]),
+
+                    Section::make('Ubicación Geográfica')
+                        ->schema([                                        
+                            View::make('zonas.map'),
+                        ]),
                     
                     Section::make('Estado y Configuración')
                         ->schema([
@@ -78,11 +83,7 @@ class ZonaResource extends Resource
                                 ->placeholder('Seleccione el estado de la zona')
                                 ->helperText('El estado determina si la zona está activa para su uso.'),
                         ]),
-                    
-                    Section::make('Ubicación Geográfica')
-                        ->schema([                                        
-                            View::make('zonas.map'),
-                        ]),
+            
                 ])
                 ->columnSpan([
                     'sm' => 2,
