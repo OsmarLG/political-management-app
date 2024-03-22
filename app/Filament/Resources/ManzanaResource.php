@@ -77,10 +77,27 @@ class ManzanaResource extends Resource
                                     ->label('Sección')
                                     ->placeholder('Selecciona una sección')
                                     ->columnSpan(2), 
+
                                 Section::make('Ubicación Geográfica')
                                     ->schema([                                        
                                         View::make('manzanas.map'),
-                                    ]),                               
+                                    ]),
+                                
+                                Section::make('Estado y Configuración')
+                                    ->schema([
+                                        Select::make('status')
+                                            ->options([
+                                                'ACTIVO' => 'Activo',
+                                                'INACTIVO' => 'Inactivo',
+                                            ])
+                                            ->default('ACTIVO')
+                                            ->searchable()
+                                            ->preload()
+                                            ->live()
+                                            ->label('Estado')
+                                            ->placeholder('Seleccione el estado de la zona')
+                                            ->helperText('El estado determina si la zona está activa para su uso.'),
+                                    ]),
                             ])
                             ->columns(2)
                             ->collapsible(),
