@@ -188,8 +188,8 @@ class MapaGeneral extends Component
 
                 $ejercicios = Ejercicio::whereIn('manzana_id', $idsManzanas)->get()
                 ->map(function ($ejercicio) {
-                    $respuesta = EncuestaRespuesta::where('ejercicio_id', $ejercicio->id)->where('pregunta_id', 2)->get()->first()->respuesta;
-                    $lona = EncuestaRespuesta::where('ejercicio_id', $ejercicio->id)->where('pregunta_id', 3)->get()->first()->respuesta;
+                    $respuesta = EncuestaRespuesta::where('ejercicio_id', $ejercicio->id)->where('pregunta_id', 2)->get()->first()->respuesta ?? '';
+                    $lona = EncuestaRespuesta::where('ejercicio_id', $ejercicio->id)->where('pregunta_id', 3)->get()->first()->respuesta ?? '';
                     
                     return [
                         'id' => $ejercicio->id,
