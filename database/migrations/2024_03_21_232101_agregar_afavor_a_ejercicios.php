@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('ejercicios', function (Blueprint $table) {
-            $table->enum('a_favor', ['A FAVOR', 'EN DESACUERDO'])->default('EN DESACUERDO');
+            $table->enum('a_favor', ['A FAVOR', 'EN DESACUERDO', 'INDECISO'])->default('EN DESACUERDO');
         });
     }
 
