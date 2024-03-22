@@ -80,8 +80,6 @@ class UsuarioAsignacionPolicy
             }
         }
 
-
-
         // Los roles 'MASTER' y 'ADMIN' pueden eliminar cualquier asignación
         if ($user->hasRole(['MASTER', 'ADMIN'])) {
             return true;
