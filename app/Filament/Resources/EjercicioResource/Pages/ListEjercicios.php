@@ -60,7 +60,7 @@ class ListEjercicios extends ListRecords
             
             return [
                     'Todas' => Tab::make()->modifyQueryUsing(fn (Builder $query) => $query
-                    ->where('manzana_id', $manzana_id)
+                    ->where('user_id', auth()->user()->id)
                 ),
             ];
         }
