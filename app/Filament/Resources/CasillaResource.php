@@ -32,6 +32,13 @@ class CasillaResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-cube';    
     protected static ?int    $navigationSort = 4;
 
+    public static function getRelations(): array
+    {
+        return [
+            RelationManagers\CasillaVotosRelationManager::class,
+            RelationManagers\CasillaVotosObjetivosRelationManager::class,
+        ];
+    }
     public static function form(Form $form): Form
     {
         return $form
@@ -96,7 +103,8 @@ class CasillaResource extends Resource
                                 ->placeholder('Selecciona una sección'),
 
                                 Section::make('Coordenadas de Ubicación Geográfica')
-                                    ->schema([
+                                    ->schema([                                        
+                                        View::make('casillas.map'),
                                         TextInput::make('Latitud')
                                         ->required()
                                         ->maxLength(255)
@@ -116,9 +124,6 @@ class CasillaResource extends Resource
                             ])
                             ->columns(2),
                     ]),
-                    View::make('casillas.map')->columnSpan([
-                        'sm' => 2,
-                    ]),
             ]);
     }
 
@@ -129,6 +134,8 @@ class CasillaResource extends Resource
                 Tables\Columns\TextColumn::make('numero')->searchable(),
                 Tables\Columns\TextColumn::make('tipo'),
                 Tables\Columns\TextColumn::make('seccion.nombre')->searchable(),
+                Tables\Columns\TextColumn::make('asignacionGeografica.latitud')->label('Latitud'),
+                Tables\Columns\TextColumn::make('asignacionGeografica.longitud')->label('Longitud'),
             ])
             ->filters([
                 //
@@ -142,13 +149,6 @@ class CasillaResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
     }
 
     public static function getPages(): array

@@ -57,6 +57,8 @@ class AsignacionesGeograficasRelationManager extends RelationManager
             ->recordTitleAttribute('descripcion')
             ->columns([
                 Tables\Columns\TextColumn::make('descripcion'),
+                Tables\Columns\TextColumn::make('latitud'),
+                Tables\Columns\TextColumn::make('longitud'),
             ])
             ->filters([
                 //

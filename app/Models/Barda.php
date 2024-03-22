@@ -2,25 +2,23 @@
 
 namespace App\Models;
 
-use App\Models\CasillaVoto;
 use App\Models\AsignacionGeografica;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Casilla extends Model
+class Barda extends Model
 {
-    //
-    use SoftDeletes; // Opcional, si deseas utilizar borrado suave.
+    use HasFactory;
+    use SoftDeletes;
 
-    protected $table = 'casillas';
+    protected $table = 'bardas';
     
     protected $fillable = [
         'id',
-        'numero',
+        'identificador',
         'seccion_id',
-        'status',
-        'tipo',
     ];
 
     public function seccion()
@@ -32,12 +30,5 @@ class Casilla extends Model
     public function asignacionGeografica(): MorphOne
     {
         return $this->morphOne(AsignacionGeografica::class, 'asignable', 'modelo', 'id_modelo');
-    }
-
-    public function CasillaVotos(){
-        return $this->hasMany(CasillaVoto::class, 'casilla_id', 'id');
-    }
-    public function CasillaVotosObjetivos(){
-        return $this->hasMany(CasillaVotoObjetivo::class, 'casilla_id', 'id');
     }
 }

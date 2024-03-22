@@ -36,9 +36,6 @@ class ZonaResource extends Resource
     {
         return $form
         ->schema([
-            View::make('zonas.map')->columnSpan([
-                'sm' => 2,
-            ]),
             Section::make()
                 ->schema([
                     Section::make('Detalles de la Zona')
@@ -80,6 +77,11 @@ class ZonaResource extends Resource
                                 ->label('Estado')
                                 ->placeholder('Seleccione el estado de la zona')
                                 ->helperText('El estado determina si la zona está activa para su uso.'),
+                        ]),
+                    
+                    Section::make('Ubicación Geográfica')
+                        ->schema([                                        
+                            View::make('zonas.map'),
                         ]),
                 ])
                 ->columnSpan([

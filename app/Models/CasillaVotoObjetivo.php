@@ -16,7 +16,7 @@ class CasillaVotoObjetivo extends Model
      
      protected $fillable = [
         'id',
-        'numero_votos_objetivo',
+        'numero_votos_objetivos',
         'ano',
         'casilla_id',
      ];
