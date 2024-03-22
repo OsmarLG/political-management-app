@@ -2,9 +2,16 @@
 
 namespace App\Filament\Resources\EjercicioResource\Pages;
 
-use App\Filament\Resources\EjercicioResource;
 use Filament\Actions;
+use App\Models\Encuesta;
+use App\Models\AsignacionGeografica;
 use Filament\Resources\Pages\EditRecord;
+use App\Filament\Resources\EncuestaResource;
+use App\Filament\Resources\EjercicioResource;
+use App\Models\Ejercicio;
+use App\Models\EncuestaRespuesta;
+use App\Models\Manzana;
+use Illuminate\Database\Eloquent\Model;
 
 class EditEjercicio extends EditRecord
 {
@@ -15,5 +22,45 @@ class EditEjercicio extends EditRecord
         return [
             Actions\DeleteAction::make(),
         ];
+    }
+
+    public function mount($record): void
+    {
+        parent::mount($record);
+
+        $ejercicio = Ejercicio::find($record);
+        $manzana = Manzana::find($ejercicio->manzana_id);
+       
+        $this->form->fill([
+                'zona_id' => $manzana->seccion->zona->id,
+                'seccion_id' => $manzana->seccion->id,
+                'manzana_id' => $manzana->id,
+                'folio' => $ejercicio->folio,
+            ]);
+
+    }
+
+
+    protected function handleRecordUpdate(Model $record, array $data): Model
+    {
+        //dd($data);
+        $respuestas_form = array_filter($data, 'is_numeric', ARRAY_FILTER_USE_KEY);
+
+
+        $record->update($data);
+
+        $asignacion = AsignacionGeografica::where('modelo', 'Ejercicio')->where('id_modelo', $record->id)->get()->first();
+        $asignacion->latitud = $data['latitud'];
+        $asignacion->longitud = $data['longitud'];
+        $asignacion->save();
+
+        $respuestas = EncuestaRespuesta::where('ejercicio_id',$record->id)->get();
+
+        foreach($respuestas as $respuesta){
+            $respuesta->respuesta = $respuestas_form[$respuesta->pregunta_id];
+            $respuesta->save();
+        }
+
+        return $record;
     }
 }

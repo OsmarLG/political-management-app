@@ -36,4 +36,8 @@ class Manzana extends Model
     {
         return $this->morphOne(AsignacionGeografica::class, 'asignable', 'modelo', 'id_modelo');
     }
+
+    public function favor(){
+        return $this->a_favor == "A FAVOR" ? true : false ;
+    }
 }

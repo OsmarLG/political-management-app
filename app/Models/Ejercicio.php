@@ -31,4 +31,19 @@ class Ejercicio extends Model
         return $this->hasOne(User::class, 'id', 'user_id');
     }
 
+    public function respuestas(){
+        return $this->hasMany(EncuestaRespuesta::class,'ejercicio_id','id');
+    }
+
+    public function a_favor() {
+        $a_favor = FALSE;
+        $respuestas = $this->respuestas;
+        foreach($respuestas as $respuesta){
+            if($respuesta->id == 6){
+                $a_favor = $respuesta->respuesta == "SI" ? TRUE : FALSE;
+            }
+        }
+        return $a_favor;
+    }
+
 }

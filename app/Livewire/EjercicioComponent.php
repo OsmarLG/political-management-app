@@ -197,7 +197,7 @@ class EjercicioComponent extends Component implements HasForms
         })
         ->searchable()
         ->preload()
-        ->reactive() // Importante para asegurar que se actualiza cuando cambia zona_id
+        ->reactive() 
         ->required()
         ->placeholder('Selecciona una zona'); 
 
@@ -217,7 +217,7 @@ class EjercicioComponent extends Component implements HasForms
         })
         ->searchable()
         ->preload()
-        ->reactive() // Importante para asegurar que se actualiza cuando cambia zona_id
+        ->reactive() 
         ->required()
         ->placeholder('Selecciona una Seccion');
 
@@ -244,7 +244,7 @@ class EjercicioComponent extends Component implements HasForms
         })
         ->afterStateUpdated(fn (callable $set) => $set('Folio', $this->folio))
         ->preload()
-        ->reactive() // Importante para asegurar que se actualiza cuando cambia zona_id
+        ->reactive() 
         ->required()
         ->placeholder('Selecciona una Manzana');
 
@@ -292,12 +292,15 @@ class EjercicioComponent extends Component implements HasForms
         //dd($this->form->getState());
         $datas = $this->form->getState();
         $respuestas = array_filter($datas, 'is_numeric', ARRAY_FILTER_USE_KEY);
-
         $ejercicio = new Ejercicio();
         $ejercicio->encuesta_id = Encuesta::first()->id ? Encuesta::first()->id : "";
         $ejercicio->user_id = auth()->user()->id;
         $ejercicio->folio = $this->folio;
         $ejercicio->manzana_id = $this->manzana->id;
+        if($respuestas['6'] == "SI"){
+            
+            $ejercicio->a_favor = "A FAVOR";
+        }
         $ejercicio->save();
 
         $asignacion_geografica = new AsignacionGeografica();

@@ -85,6 +85,8 @@ class SeccionResource extends Resource
                 Tables\Columns\TextColumn::make('manzanas_count')
                 ->label('Número de Manzanas')
                 ->counts('manzanas'),
+                Tables\Columns\TextColumn::make('manzanas_favor')
+                ->label('A favor')
             ])
             ->filters([
                 //

@@ -11,4 +11,6 @@ class Ejercicio extends Page
     protected static string $view = 'filament.pages.ejercicio';
 
     protected static ?string $navigationGroup = 'Ejercicios';
+    protected static ?string $label = 'Nuevo Ejercicio';
+    protected static ?string $navigationLabel = 'Nuevo Ejercicio';
 }

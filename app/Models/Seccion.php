@@ -46,4 +46,18 @@ class Seccion extends Model
     {
         return $this->morphOne(AsignacionGeografica::class, 'asignable', 'modelo', 'id_modelo');
     }
+
+    /*
+        public function manzanas_favor(){
+        $contador = 0;
+        $manzanas = $this->manzanas();
+        foreach($manzanas as $manzana){
+            if($manzana->a_favor == "A FAVOR"){
+                $contador = $contador + 1;
+            }
+        }
+        return $contador;
+    }
+    */
+
 }

@@ -22,10 +22,15 @@ class EncuestaResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationGroup = 'System Management';
     protected static ?int    $navigationSort = 5;
-    protected static ?string $navigationLabel = 'Encuestas';
-    protected static ?string $pluralLabel = 'Encuestas';
+    protected static ?string $navigationLabel = 'Encuesta';
+    protected static ?string $pluralLabel = 'Encuesta';
     protected static ?string $label = 'Encuesta';
 
+
+    public static function canCreate(): bool
+    {
+        return false;
+    }
 
     public static function form(Form $form): Form
     {
