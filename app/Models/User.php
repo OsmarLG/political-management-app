@@ -59,6 +59,10 @@ class User extends Authenticatable
         return $query->where('status', 'ACTIVO');
     }
 
+    public function ejercicios(){
+        return $this->hasMany(Ejercicio::class);
+    }
+
     public function Asignacion()
     {
         return $this->hasOne(UsuarioAsignacion::class);

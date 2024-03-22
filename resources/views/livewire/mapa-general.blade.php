@@ -14,7 +14,6 @@
                 @endif
                 @if (auth()->user()->hasRole(['MASTER', 'ADMIN', 'C DISTRITAL', 'C ENLACE DE MANZANA']))
                     <option value="SECCIONES">Secciones</option>
-                    <option value="MANZANAS">Manzanas</option>
                 @endif  
                 @if (auth()->user()->hasRole(['MASTER', 'ADMIN', 'C DISTRITAL', 'C ENLACE DE MANZANA', 'MANZANAL']))
                     <option value="MANZANAS">Manzanas</option>

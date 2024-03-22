@@ -39,5 +39,5 @@ class Manzana extends Model
 
     public function favor(){
         return $this->a_favor == "A FAVOR" ? true : false ;
-    }
+    }    
 }
