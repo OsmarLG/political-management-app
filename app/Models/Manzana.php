@@ -15,6 +15,7 @@ class Manzana extends Model
     protected $table = 'manzanas';
     
     protected $fillable = [
+        'id',
         'seccion_id',
         'nombre',
         'descripcion',
@@ -39,5 +40,11 @@ class Manzana extends Model
 
     public function favor(){
         return $this->a_favor == "A FAVOR" ? true : false ;
+    }
+
+    public function getIntencionVotoAttribute(){ 
+        $ejercicio_a_favor = Ejercicio::where('a_favor','A FAVOR')
+        ->where('manzana_id',$this->id)->get();
+        return count($ejercicio_a_favor);
     }
 }

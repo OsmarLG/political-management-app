@@ -114,6 +114,7 @@ class ManzanaResource extends Resource
                 Tables\Columns\TextColumn::make('descripcion'),
                 Tables\Columns\TextColumn::make('seccion.nombre')->searchable(),
                 Tables\Columns\TextColumn::make('seccion.zona.nombre')->searchable(),
+                Tables\Columns\TextColumn::make('intencionVoto')->searchable(),
             ])
             ->filters([
                 //

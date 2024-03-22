@@ -107,6 +107,8 @@ class ZonaResource extends Resource
                 TextColumn::make('manzanas_count')
                     ->label('Número de Manzanas')
                     ->counts('manzanas'),
+
+                TextColumn::make('intencionVoto')->searchable(),
                     
             ])
             ->filters([
