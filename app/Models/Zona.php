@@ -42,4 +42,15 @@ class Zona extends Model
     {
         return $this->morphOne(AsignacionGeografica::class, 'asignable', 'modelo', 'id_modelo');
     }
+
+    public function getIntencionVotoAttribute(){ 
+        $ejercicio_a_favor = Ejercicio::where('a_favor','A FAVOR')  
+        ->join('manzanas', 'ejercicios.manzana_id', '=', 'manzanas.id')
+        ->join('secciones', 'manzanas.seccion_id', '=', 'secciones.id')
+        ->join('zonas', 'secciones.zona_id', '=', 'zonas.id')
+        ->where('zonas.id', $this->id)
+        ->get();
+
+        return count($ejercicio_a_favor);
+    }
 }
