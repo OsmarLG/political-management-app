@@ -9,6 +9,14 @@ class Ejercicio extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'id',
+        'encuesta_id',
+        'user_id',
+        'manzana_id',
+        'folio',
+    ];
+
     // Si solo debe haber una asignación por zona
     public function asignacionGeografica()
     {
