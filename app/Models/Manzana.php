@@ -27,6 +27,10 @@ class Manzana extends Model
         return $this->belongsTo(Seccion::class, 'seccion_id');
     }
 
+    public function ejercicios(){
+        return $this->hasMany(Ejercicio::class);
+    }
+
     public function asignacionesGeograficas(): MorphMany
     {
         return $this->morphMany(AsignacionGeografica::class, 'asignable', 'modelo', 'id_modelo');

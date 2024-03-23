@@ -9,7 +9,7 @@ class Configuracion extends Model
 {
     use HasFactory;
 
-    public const CANDIDATO = 'SIN DEFINIR';
+    public const CANDIDATO = 'Karina Olivas';
 
     public static function getCandidato() {
         return self::CANDIDATO;
