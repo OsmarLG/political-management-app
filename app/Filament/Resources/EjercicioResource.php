@@ -148,7 +148,8 @@ class EjercicioResource extends Resource
                 $MANZANAL_INICIALES = $consulta_manzanal->first() ? User::find( $consulta_manzanal->first()->user_id)->iniciales() : '';
                 $fecha = Carbon::Now()->format('d-m-Y-s-i-h');
                 $random = rand(1, 999);
-                $folio = "D{$manzana->seccion->zona->id}-{$C_DISTRITAL_INICIALES}-S{$manzana->seccion->id}-{$C_ENLACE_MANZANA_INICIALES}-M{$manzana->id}-{$MANZANAL_INICIALES}-{$fecha}-{$random}";
+                $folio = "{$manzana->seccion->zona->nombre}-{$C_DISTRITAL_INICIALES}-S{$manzana->seccion->nombre}-{$C_ENLACE_MANZANA_INICIALES}-M{$manzana->nombre}-{$MANZANAL_INICIALES}-{$fecha}-{$random}";
+                
                 $set('folio', $folio );
             })
             ->preload()

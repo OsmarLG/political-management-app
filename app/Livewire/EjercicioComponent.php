@@ -346,7 +346,7 @@ class EjercicioComponent extends Component implements HasForms
             $MANZANAL_INICIALES = $consulta_manzanal->first() ? User::find( $consulta_manzanal->first()->user_id)->iniciales() : '';
             $fecha = Carbon::Now()->format('d-m-Y-s-i-h');
             $random = rand(1, 999);
-            $this->folio = "D{$this->manzana->seccion->zona->id}-{$C_DISTRITAL_INICIALES}-S{$this->manzana->seccion->id}-{$C_ENLACE_MANZANA_INICIALES}-M{$this->manzana->id}-{$MANZANAL_INICIALES}-{$fecha}-{$random}";
+            $this->folio = "{$this->manzana->seccion->zona->nombre}-{$C_DISTRITAL_INICIALES}-S{$this->manzana->seccion->nombre}-{$C_ENLACE_MANZANA_INICIALES}-M{$this->manzana->nombre}-{$MANZANAL_INICIALES}-{$fecha}-{$random}";
 
             /*
                         $C_DISTRITAL = User::find( UsuarioAsignacion::where('modelo','Zona')->where('id_modelo',$this->manzana->seccion->zona->id)->first()->user_id) ?? '';
