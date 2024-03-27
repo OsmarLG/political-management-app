@@ -9,6 +9,7 @@ use Filament\Resources\Pages\ListRecords;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\EjercicioResource;
 use App\Models\Manzana;
+use App\Models\Zona;
 use App\Models\Seccion;
 use App\Models\UsuarioAsignacion;
 
@@ -28,7 +29,13 @@ class ListEjercicios extends ListRecords
 
         if(auth()->user()->hasRole(['C DISTRITAL'])){
             $consulta_aginacion = UsuarioAsignacion::where('modelo','Zona')->where('user_id',auth()->user()->id)->first();
-            $zona_id = $consulta_aginacion ? Seccion::find($consulta_aginacion->id_modelo)->id: null ;
+            
+            if(Zona::find($consulta_aginacion->id_modelo)){
+                $zona_id =  Zona::find($consulta_aginacion->id_modelo)->id;
+            }else{
+                $zona_id = null;
+            }
+           
             
             return [
                     'Todas' => Tab::make()->modifyQueryUsing(fn (Builder $query) => 
