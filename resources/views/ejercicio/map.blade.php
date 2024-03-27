@@ -47,6 +47,8 @@
 
         var lona = @json($getRecord()->respuestas[2]['respuesta']);
 
+        var intencion_voto = @json($getRecord()->a_favor);
+
         var name = @json($getRecord()->user->name . '' . $getRecord()->user->apellido_paterno . ' ' . $getRecord()->user->apellido_materno)
 
         if (@json($getRecord()->a_favor == 'A FAVOR')){
@@ -61,7 +63,7 @@
         // Crea un marcador en la posición de la asignación geográfica
         var marker = L.marker([latitud, longitud], { icon: chooseIcon }).addTo(map);
         // Adjunta un popup al marcador con información del ejercicio
-        marker.bindPopup("<b>Folio:</b> " + "<b>" + folio + "</b>" + "<br>" + "<b>Lona:</b> " + lona + "<br>" + "<b>Por:</b> " + name + "<br>" + fecha);
+        marker.bindPopup("<b>Folio:</b> " + "<b>" + folio + "</b>" + "<br>" + "<b>Intencion de voto:</b> " + "<b>" + intencion_voto + "</b>" + "<br>" + "<b>Lona:</b> " + lona + "<br>" + "<b>Por:</b> " + name + "<br>" + fecha);
 
                         
         map.on('click', function(e) {

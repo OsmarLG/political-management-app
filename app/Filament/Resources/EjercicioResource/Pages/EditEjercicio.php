@@ -51,6 +51,18 @@ class EditEjercicio extends EditRecord
         //dd($data);
         $respuestas_form = array_filter($data, 'is_numeric', ARRAY_FILTER_USE_KEY);
 
+        if($respuestas_form['2'] == "SI"){
+            
+            $record->a_favor = "A FAVOR";
+        }
+        if($respuestas_form['2'] == "INDECISO"){
+            
+            $record->a_favor = "INDECISO";
+        }
+        if($respuestas_form['2'] == "NO"){
+            
+            $record->a_favor = "EN DESACUERDO";
+        }
 
         $record->update($data);
 

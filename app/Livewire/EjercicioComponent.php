@@ -301,6 +301,10 @@ class EjercicioComponent extends Component implements HasForms
             
             $ejercicio->a_favor = "A FAVOR";
         }
+        if($respuestas['2'] == "INDECISO"){
+            
+            $ejercicio->a_favor = "INDECISO";
+        }
         $ejercicio->save();
 
         $asignacion_geografica = new AsignacionGeografica();
