@@ -320,10 +320,13 @@
 
                             if (ejercicio.respuesta == 'SI'){
                                 chooseIcon = greenIcon;
+                                intecion_voto = "A FAVOR";
                             } else if (ejercicio.respuesta == 'NO'){
                                 chooseIcon = redIcon;
+                                intecion_voto = "EN DESACUERDO";
                             } else if (ejercicio.respuesta == 'INDECISO') {
                                 chooseIcon = yellowIcon;
+                                intecion_voto = "INDECISO";
                             } else {
                                 chooseIcon = blueIcon;
                             }
@@ -332,7 +335,7 @@
                             var marker = L.marker([latitud, longitud], { icon: chooseIcon }).addTo(map);
 
                             // Adjunta un popup al marcador con información del ejercicio
-                            marker.bindPopup("<b>Folio:</b> " + "<b>"+ejercicio.folio+"</b>" + "<br>" + "<b>Lona:</b> " + "<b>"+ejercicio.lona+"</b>" + "<br>" + "<b>Por:</b> " + ejercicio.user.nombre + "<br>" + ejercicio.fecha);
+                            marker.bindPopup("<b>Folio:</b> " + "<b>"+ejercicio.folio+"</b>" + "<br>" + "<b>Intecion de voto:</b> "+"<b>"+ intecion_voto + "</b>"+ "<br/>" +"<b>Lona:</b> " + "<b>"+ejercicio.lona+"</b>" + "<br>" + "<b>Por:</b> " + ejercicio.user.nombre + "<br>" + ejercicio.fecha);
                         }
                     });
                 }
